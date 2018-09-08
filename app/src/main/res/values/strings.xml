@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">PU DigiPlanner</string>
+    <string name="welcometo">Welcome to PU DigiPlanner</string>
+    <string name="thanksforinstalling">Thanks for installing - Let\'s get you set up!</string>
+    <string name="getstarted">Get Started!</string>
+    <string name="registerheading">REGISTER</string>
+    <string name="createyouraccount">Create Your Account</string>
+    <string name="enteryourdetails">Enter your details</string>
+    <string name="loginheading">LOGIN</string>
+    <string name="loginyouraccount">Welcome back!</string>
+    <string name="enteryouremail">Enter your email to login</string>
+    <string name="connectwithus">Connect with us</string>
+    <string name="aboutme">About me</string>
+    <string name="appdetails">App details</string>
+    <string name="aboutme_name">Name</string>
+    <string name="aboutme_email">Email address</string>
+    <string name="aboutme_mobile">Mobile number</string>
+    <string name="aboutme_password">Password</string>
+    <string name="aboutme_language">Language</string>
+    <string name="aboutme_status">Status</string>
+    <string name="help_faq">FAQ</string>
+    <string name="help_contactus">Contact us</string>
+    <string name="help_policy">Terms and Privacy Policy</string>
+    <string name="help_appinfo">App Info</string>
+    <string name="pleasedescribe">Please describe your problem</string>
+    <string name="help_send">Send</string>
+    <string name="calendar_today">Today</string>
+    <string name="calender_date">dd/mm/yyyy</string>
+    <string name="contacts_search_hint">Search contacts</string>
+    <string name="calender_add_title">Event details</string>
+    <string name="calender_add_name">Title</string>
+    <string name="calender_add_location">Location</string>
+    <string name="calender_add_reminder_title">Reminder</string>
+    <string name="calender_add_date">Date</string>
+    <string name="calender_add_time">Time</string>
+    <string name="addevent">Add Event</string>
+    <string name="addcontact">Add contact</string>
+    <string name="contact_add_title">Contact details</string>
+    <string name="contact_add_name">Name</string>
+    <string name="contact_add_work_title">Work details</string>
+    <string name="contact_add_email">Email address</string>
+    <string name="contact_add_mobile">Mobile number</string>
+    <string name="contact_add_designation">Designation</string>
+    <string name="contact_add_employeeid">Employee ID</string>
+    <string name="contact_card_heading">Contact Information</string>
+    <string name="aboutme_empid">Employee ID</string>
+    <string name="logout">LOG OUT</string>
+    <string-array name="contact_types">
+        <item>Mobile</item>
+        <item>Office</item>
+        <item>Intercom</item>
+    </string-array>
+
+    <string-array name="list_of_designation">
+        <item>Assistant Professor</item>
+        <item>Associate Professor</item>
+        <item>Professor</item>
+    </string-array>
+</resources>

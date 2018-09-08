@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "122456905118",
+    "firebase_url": "https://pu-digiplanner.firebaseio.com",
+    "project_id": "pu-digiplanner",
+    "storage_bucket": "pu-digiplanner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122456905118:android:0454578390467d82",
+        "android_client_info": {
+          "package_name": "com.example.nadus.pu_planner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "122456905118-1og2tonqsoo2mm9hapsn3rs59m8mtafh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_zG0arEeHJwE5vGYeOxFM6e_1gUQj4oA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

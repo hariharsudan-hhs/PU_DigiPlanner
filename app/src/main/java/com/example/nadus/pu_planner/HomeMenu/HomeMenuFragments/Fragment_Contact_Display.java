@@ -40,7 +40,7 @@ public class Fragment_Contact_Display extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.contact_card_view,container,false);
+        View v = inflater.inflate(R.layout.fragment_contact_view,container,false);
 
         HomeActivity.toolbar.setTitle("Contact Detail");
 

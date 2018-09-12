@@ -2,6 +2,7 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,13 +10,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
@@ -26,9 +32,16 @@ public class Fragment_Calendar_Add extends Fragment {
 
     Calligrapher calligrapher;
 
-    EditText calendar_event_add_dp, calendar_event_add_tp;
+    EditText calendar_event_add_dp, calendar_event_add_tp, calender_add_name, calender_add_location;
+    String sCalendername, sCalenderlocation, sDatepicker, sTimepicker;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String mAMPM;
+    Button add_event;
+
+    FirebaseAuth firebaseAuth;
+    DatabaseReference databaseReference;
+
+    ProgressDialog progressDialog;
 
     @Nullable
     @Override
@@ -37,8 +50,17 @@ public class Fragment_Calendar_Add extends Fragment {
 
         HomeActivity.toolbar.setTitle("Add an event");
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+
         calendar_event_add_dp = (EditText) v.findViewById(R.id.calendar_event_add_dp);
         calendar_event_add_tp = (EditText) v.findViewById(R.id.calendar_event_add_tp);
+        calender_add_name = (EditText) v.findViewById(R.id.calender_add_name);
+        calender_add_location = (EditText) v.findViewById(R.id.calender_add_location);
+        add_event = (Button) v.findViewById(R.id.add_event);
 
         calendar_event_add_dp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +79,8 @@ public class Fragment_Calendar_Add extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                calendar_event_add_dp.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                monthOfYear = monthOfYear+1;
+                                calendar_event_add_dp.setText(String.format("%02d",dayOfMonth) + "/" + String.format("%02d",monthOfYear) + "/" + year);
 
                             }
                         }, mYear, mMonth, mDay);
@@ -88,12 +111,14 @@ public class Fragment_Calendar_Add extends Fragment {
                                     mAMPM = "PM";
                                 }
 
-                                calendar_event_add_tp.setText(hourOfDay + ":" + minute + " " + mAMPM);
+                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute) + " " + mAMPM);
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();
             }
         });
+
+
 
         return v;
     }
@@ -104,5 +129,74 @@ public class Fragment_Calendar_Add extends Fragment {
 
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
+
+        add_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getValues())
+                {
+                    progressDialog.show();
+                    updateValueinDB();
+                    Toast.makeText(getActivity(),"Success!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void updateValueinDB()
+    {
+        EventAdapter eventAdapter = new EventAdapter();
+        eventAdapter.setsCalendername(sCalendername);
+        eventAdapter.setsCalenderlocation(sCalenderlocation);
+        eventAdapter.setsDatepicker(sDatepicker);
+        eventAdapter.setsTimepicker(sTimepicker);
+
+        String current_user = firebaseAuth.getCurrentUser().getEmail();
+        current_user = current_user.replace(".","_");
+
+        sDatepicker = sDatepicker.replace("/","_");
+        sTimepicker = sTimepicker.replace(":","_");
+
+        databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(sDatepicker).child(sCalendername).setValue(eventAdapter);
+        clearAll();
+        progressDialog.dismiss();
+    }
+
+    private boolean getValues()
+    {
+        sCalendername = calender_add_name.getText().toString().trim();
+        sCalenderlocation = calender_add_location.getText().toString().trim();
+        sDatepicker = calendar_event_add_dp.getText().toString().trim();
+        sTimepicker = calendar_event_add_tp.getText().toString().trim();
+
+        if(sCalendername.equals(""))
+        {
+            Toast.makeText(getActivity(),"Field Empty!",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(sCalenderlocation.equals(""))
+        {
+            Toast.makeText(getActivity(),"Field Empty!",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(sDatepicker.equals(""))
+        {
+            Toast.makeText(getActivity(),"Field Empty!",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(sTimepicker.equals(""))
+        {
+            Toast.makeText(getActivity(),"Field Empty!",Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void clearAll()
+    {
+        calender_add_name.getText().clear();
+        calender_add_location.getText().clear();
+        calendar_event_add_dp.getText().clear();
+        calendar_event_add_tp.getText().clear();
     }
 }

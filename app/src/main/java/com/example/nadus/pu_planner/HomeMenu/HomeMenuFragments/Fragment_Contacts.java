@@ -68,9 +68,6 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        local_employeeid = pref.getString("emp_id",null);
-
         contact_add_fab = (FloatingActionButton) v.findViewById(R.id.contact_add_fab);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
 
@@ -122,7 +119,7 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
         current_contact = empno_list.get(position);
         System.out.println("@@@@ current contact clicked "+ current_contact);
         getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Contact_Display()).addToBackStack(null).commit();

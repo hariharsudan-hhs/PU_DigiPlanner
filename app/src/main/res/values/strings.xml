@@ -24,7 +24,7 @@
     <string name="help_appinfo">App Info</string>
     <string name="pleasedescribe">Please describe your problem</string>
     <string name="help_send">Send</string>
-    <string name="calendar_today">Today</string>
+    <string name="calendar_today">TODAY</string>
     <string name="calender_date">dd/mm/yyyy</string>
     <string name="contacts_search_hint">Search contacts</string>
     <string name="calender_add_title">Event details</string>

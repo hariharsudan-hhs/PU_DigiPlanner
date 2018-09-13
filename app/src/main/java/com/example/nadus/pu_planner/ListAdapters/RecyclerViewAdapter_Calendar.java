@@ -48,8 +48,8 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
         String name = mData2.get(position);
         holder.calendar_card_name.setText(name);
 
-        String location = mData3.get(position);
-        holder.calendar_card_location.setText(location);
+        String description = mData3.get(position);
+        holder.calendar_card_description.setText(description);
 
         String status = mData4.get(position);
         holder.calendar_card_status.setText(status);
@@ -65,13 +65,13 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView calendar_card_time, calendar_card_name, calendar_card_location, calendar_card_status;
+        TextView calendar_card_time, calendar_card_name, calendar_card_description, calendar_card_status;
 
         ViewHolder(View itemView) {
             super(itemView);
             calendar_card_time = itemView.findViewById(R.id.calendar_card_time);
             calendar_card_name = itemView.findViewById(R.id.calendar_card_name);
-            calendar_card_location = itemView.findViewById(R.id.calendar_card_location);
+            calendar_card_description = itemView.findViewById(R.id.calendar_card_description);
             calendar_card_status = itemView.findViewById(R.id.calendar_card_status);
 
             itemView.setOnClickListener(this);

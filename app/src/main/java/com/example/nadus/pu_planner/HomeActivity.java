@@ -3,7 +3,6 @@ package com.example.nadus.pu_planner;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import com.example.nadus.pu_planner.HomeMenu.DrawerAdapter;
 import com.example.nadus.pu_planner.HomeMenu.DrawerItem;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_About;
+import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllEvents;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Calendar;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Contacts;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Help;
@@ -39,10 +39,11 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
     private static final int POS_CALENDAR = 0;
     private static final int POS_CONTACTS = 1;
-    private static final int POS_PROFILE = 2;
-    private static final int POS_SETTINGS = 3;
-    private static final int POS_ABOUT = 5;
-    private static final int POS_HELP = 6;
+    private static final int POS_ALLEVENTS = 2;
+    private static final int POS_PROFILE = 3;
+    private static final int POS_SETTINGS = 4;
+    private static final int POS_ABOUT = 6;
+    private static final int POS_HELP = 7;
 
     private String[] screenTitles;
     private Drawable[] screenIcons;
@@ -86,6 +87,7 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
                 createItemFor(POS_CALENDAR).setChecked(true),
                 createItemFor(POS_CONTACTS),
+                createItemFor(POS_ALLEVENTS),
                 createItemFor(POS_PROFILE),
                 createItemFor(POS_SETTINGS),
                 new SpaceItem(34),
@@ -120,6 +122,10 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         else if(position == POS_CONTACTS)
         {
             selectedScreen = new Fragment_Contacts();
+        }
+        else if(position == POS_ALLEVENTS)
+        {
+            selectedScreen = new Fragment_AllEvents();
         }
         else if(position == POS_PROFILE)
         {

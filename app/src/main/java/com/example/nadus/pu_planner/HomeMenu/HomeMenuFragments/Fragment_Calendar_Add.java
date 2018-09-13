@@ -32,8 +32,8 @@ public class Fragment_Calendar_Add extends Fragment {
 
     Calligrapher calligrapher;
 
-    EditText calendar_event_add_dp, calendar_event_add_tp, calender_add_name, calender_add_location;
-    String sCalendername, sCalenderlocation, sDatepicker, sTimepicker;
+    EditText calendar_event_add_dp, calendar_event_add_tp, calender_add_name, calender_add_description;
+    String sCalendername, sCalenderdescription, sDatepicker, sTimepicker;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private String mAMPM;
     Button add_event;
@@ -59,7 +59,7 @@ public class Fragment_Calendar_Add extends Fragment {
         calendar_event_add_dp = (EditText) v.findViewById(R.id.calendar_event_add_dp);
         calendar_event_add_tp = (EditText) v.findViewById(R.id.calendar_event_add_tp);
         calender_add_name = (EditText) v.findViewById(R.id.calender_add_name);
-        calender_add_location = (EditText) v.findViewById(R.id.calender_add_location);
+        calender_add_description = (EditText) v.findViewById(R.id.calender_add_description);
         add_event = (Button) v.findViewById(R.id.add_event);
 
         calendar_event_add_dp.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +147,7 @@ public class Fragment_Calendar_Add extends Fragment {
     {
         EventAdapter eventAdapter = new EventAdapter();
         eventAdapter.setsCalendername(sCalendername);
-        eventAdapter.setsCalenderlocation(sCalenderlocation);
+        eventAdapter.setsCalenderdescription(sCalenderdescription);
         eventAdapter.setsDatepicker(sDatepicker);
         eventAdapter.setsTimepicker(sTimepicker);
 
@@ -165,7 +165,7 @@ public class Fragment_Calendar_Add extends Fragment {
     private boolean getValues()
     {
         sCalendername = calender_add_name.getText().toString().trim();
-        sCalenderlocation = calender_add_location.getText().toString().trim();
+        sCalenderdescription = calender_add_description.getText().toString().trim();
         sDatepicker = calendar_event_add_dp.getText().toString().trim();
         sTimepicker = calendar_event_add_tp.getText().toString().trim();
 
@@ -174,7 +174,7 @@ public class Fragment_Calendar_Add extends Fragment {
             Toast.makeText(getActivity(),"Field Empty!",Toast.LENGTH_SHORT).show();
             return false;
         }
-        else if(sCalenderlocation.equals(""))
+        else if(sCalenderdescription.equals(""))
         {
             Toast.makeText(getActivity(),"Field Empty!",Toast.LENGTH_SHORT).show();
             return false;
@@ -195,7 +195,7 @@ public class Fragment_Calendar_Add extends Fragment {
     private void clearAll()
     {
         calender_add_name.getText().clear();
-        calender_add_location.getText().clear();
+        calender_add_description.getText().clear();
         calendar_event_add_dp.getText().clear();
         calendar_event_add_tp.getText().clear();
     }

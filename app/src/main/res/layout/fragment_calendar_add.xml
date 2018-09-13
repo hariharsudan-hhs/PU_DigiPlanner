@@ -61,19 +61,19 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="10dp"
-            android:text="@string/calender_add_location"
+            android:text="@string/calender_add_description"
             android:textColor="@color/darkblue"
             android:textSize="14sp" />
 
         <EditText
-            android:id="@+id/calender_add_location"
+            android:id="@+id/calender_add_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:backgroundTint="@color/gray"
             android:ems="10"
-            android:hint="Eg. Pondicherry, Tamil Nadu..."
+            android:hint="Eg. Additional Information"
             android:inputType="textPersonName"
             android:paddingBottom="15dp"
             android:textSize="14sp" />

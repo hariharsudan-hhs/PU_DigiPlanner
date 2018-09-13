@@ -19,9 +19,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\nadus\Downloads\icons8-plus-48.png" />
-                                      <entry key="outputName" value="ic_action_add_icon" />
-                                      <entry key="theme" value="HOLO_DARK" />
+                                      <entry key="imageAsset" value="C:\Users\nadus\Downloads\icons8-calendar-1-50.png" />
+                                      <entry key="outputName" value="ic_action_academic_calendar" />
                                       <entry key="themeColor" value="1fddad" />
                                     </map>
                                   </option>

@@ -4,7 +4,7 @@ public class EventAdapter {
     public EventAdapter() {
     }
 
-    String sCalendername, sCalenderlocation, sDatepicker, sTimepicker;
+    String sCalendername, sCalenderdescription, sDatepicker, sTimepicker;
 
     public String getsCalendername() {
         return sCalendername;
@@ -14,12 +14,12 @@ public class EventAdapter {
         this.sCalendername = sCalendername;
     }
 
-    public String getsCalenderlocation() {
-        return sCalenderlocation;
+    public String getsCalenderdescription() {
+        return sCalenderdescription;
     }
 
-    public void setsCalenderlocation(String sCalenderlocation) {
-        this.sCalenderlocation = sCalenderlocation;
+    public void setsCalenderdescription(String sCalenderdescription) {
+        this.sCalenderdescription = sCalenderdescription;
     }
 
     public String getsDatepicker() {

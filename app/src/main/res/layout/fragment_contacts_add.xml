@@ -166,7 +166,7 @@
                             android:layout_weight="1"
                             android:backgroundTint="@color/gray"
                             android:ems="10"
-                            android:hint="Eg. xxxx xxxx xx"
+                            android:hint="Eg. Personal Mobile"
                             android:inputType="number|phone"
                             android:paddingBottom="15dp"
                             android:textSize="14sp" />
@@ -230,7 +230,7 @@
                             android:layout_weight="1"
                             android:backgroundTint="@color/gray"
                             android:ems="10"
-                            android:hint="Eg. Telecom Number (Optional)"
+                            android:hint="Eg. Intercom Number (Optional)"
                             android:inputType="number|phone"
                             android:paddingBottom="15dp"
                             android:textSize="14sp" />

@@ -20,7 +20,7 @@ public class Fragment_Help extends Fragment {
 
     Calligrapher calligrapher;
 
-    TextView help_faq, help_contactus, help_policy, help_appinfo;
+    TextView help_faq, help_contactus, help_policy, help_appinfo, help_howtouse;
 
     NoInternetDialog noInternetDialog;
 
@@ -37,6 +37,7 @@ public class Fragment_Help extends Fragment {
         help_contactus = (TextView) v.findViewById(R.id.help_contactus);
         help_policy = (TextView) v.findViewById(R.id.help_policy);
         help_appinfo = (TextView) v.findViewById(R.id.help_appinfo);
+        help_howtouse = (TextView) v.findViewById(R.id.help_howtouse);
 
         help_faq.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +66,13 @@ public class Fragment_Help extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(),"App Info",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        help_howtouse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"How to use the app",Toast.LENGTH_SHORT).show();
             }
         });
 

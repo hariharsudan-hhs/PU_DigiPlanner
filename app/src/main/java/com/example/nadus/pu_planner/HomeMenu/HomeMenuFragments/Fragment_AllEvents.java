@@ -58,6 +58,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
     List<String> name_list2 = new ArrayList<String>();
     List<String> description_list2 = new ArrayList<String>();
     List<String> status_list2 = new ArrayList<String>();
+    public static List<String> date_list2 = new ArrayList<String>();
 
     ProgressDialog progressDialog;
 
@@ -217,6 +218,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
+                    date_list2.add(eventAdapter.getsDatepicker());
                     time_list2.add(eventAdapter.getsTimepicker());
                     name_list2.add(eventAdapter.getsCalendername());
                     description_list2.add(eventAdapter.getsCalenderdescription());
@@ -254,6 +256,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
+                    date_list2.add(eventAdapter.getsDatepicker());
                     time_list2.add(eventAdapter.getsTimepicker());
                     name_list2.add(eventAdapter.getsCalendername());
                     description_list2.add(eventAdapter.getsCalenderdescription());

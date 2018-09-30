@@ -54,6 +54,11 @@
     <string name="reminder_heading_3">Alarm Details</string>
     <string name="reminder_alarm">Alarm Status</string>
     <string name="continue_button">Continue</string>
+    <string name="allevents_set_reminder_text">Edit Reminder</string>
+    <string name="settings_pdf_generation">Generate PDF</string>
+    <string name="settings_vcf_generation">Generate VCF</string>
+    <string name="settings_language">Choose app language</string>
+    <string name="help_howtouse">How to use the app</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>

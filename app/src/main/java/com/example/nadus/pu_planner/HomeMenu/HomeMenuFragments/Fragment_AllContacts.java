@@ -1,9 +1,7 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,11 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
+import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Contacts_Department_1;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Contacts;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,24 +34,19 @@ import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
-public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_Contacts.ItemClickListener{
+public class Fragment_AllContacts extends Fragment implements RecyclerViewAdapter_All_Contacts_Department_1.ItemClickListener{
 
     Calligrapher calligrapher;
     private RecyclerView recyclerView;
-    RecyclerViewAdapter_Contacts adapter;
+    RecyclerViewAdapter_All_Contacts_Department_1 adapter;
 
     FloatingActionButton contact_add_fab;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
 
-    List<String> contact_list = new ArrayList<String>();
-    List<String> empno_list = new ArrayList<String>();
+    List<String> dept_list = new ArrayList<String>();
 
-    String local_employeeid;
-
-    ContactsAdapter contactsAdapter;
-
-    public static String current_contact;
+    public static String current_item_clicked;
 
     ProgressDialog progressDialog;
 
@@ -63,9 +55,9 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_contacts,container,false);
+        View v = inflater.inflate(R.layout.fragment_allcontacts,container,false);
 
-        HomeActivity.toolbar.setTitle("My Contacts");
+        HomeActivity.toolbar.setTitle("PU Contacts");
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -73,22 +65,13 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
 
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
 
-        contact_add_fab = (FloatingActionButton) v.findViewById(R.id.contact_add_fab);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_allcontacts);
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        contact_add_fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"Add contact",Toast.LENGTH_SHORT).show();
-                getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Contacts_Add()).addToBackStack(null).commit();
-            }
-        });
-
-        current_contact = "";
-        contact_list.clear();
+        current_item_clicked = "";
+        dept_list.clear();
         new MyTask().execute();
 
         return v;
@@ -101,20 +84,11 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
 
-        // data to populate the RecyclerView with
-//        ArrayList<String> contactNames = new ArrayList<>();
-//        contactNames.add("Horse");
-//        contactNames.add("Cow");
-//        contactNames.add("Camel");
-//        contactNames.add("Sheep");
-//        contactNames.add("Goat");
-
-        // set up the RecyclerView
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new RecyclerViewAdapter_Contacts(getActivity(), contact_list, empno_list);
+        adapter = new RecyclerViewAdapter_All_Contacts_Department_1(getActivity(), dept_list);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
@@ -125,9 +99,9 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
     @Override
     public void onItemClick(View view, int position) {
         //Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        current_contact = empno_list.get(position);
-        System.out.println("@@@@ current contact clicked "+ current_contact);
-        getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Contact_Display()).addToBackStack(null).commit();
+        current_item_clicked = dept_list.get(position);
+        System.out.println("@@@@ current contact clicked "+ current_item_clicked);
+        getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_AllContacts_2()).addToBackStack(null).commit();
     }
 
     private class MyTask extends AsyncTask<String, Integer, String>
@@ -137,25 +111,17 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         protected String doInBackground(String... strings) {
 
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            System.out.println("@@@@ current user email is "+firebaseAuth.getCurrentUser().getEmail());
-            String current_user = firebaseAuth.getCurrentUser().getEmail();
-            current_user = current_user.replace(".","_");
 
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("ContactsDiary");
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("AllContactDiary");
 
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                     {
-                        System.out.println("@@@@ contacts are "+dataSnapshot1.getKey());
+                        System.out.println("@@@@ departments are "+dataSnapshot1.getKey());
                         String key = dataSnapshot1.getKey();
-                        empno_list.add(key);
-                        contactsAdapter = dataSnapshot1.getValue(ContactsAdapter.class);
-                        System.out.println("@@@@ Name is "+contactsAdapter.getsContact_name());
-                        String key2 = contactsAdapter.getsContact_name();
-                        contact_list.add(key2);
-
+                        dept_list.add(key);
                     }
                     recyclerView.setAdapter(adapter);
                     progressDialog.dismiss();

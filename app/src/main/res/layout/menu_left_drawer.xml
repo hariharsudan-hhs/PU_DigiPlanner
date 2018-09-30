@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:orientation="vertical">
+    android:background="@android:color/white">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <Space
         android:layout_width="wrap_content"
         android:layout_height="60dp" />
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingStart="24dp"
-        android:text="Firstname Lastname"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingStart="24dp"
+            android:text="Firstname Lastname"
+            android:textColor="@color/darkblue"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
     <TextView
         android:id="@+id/email"
@@ -44,4 +48,14 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp" />
 
-</LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="PU DigiPlanner 2018 \u00A9"
+        android:textSize="10sp" />
+</RelativeLayout>

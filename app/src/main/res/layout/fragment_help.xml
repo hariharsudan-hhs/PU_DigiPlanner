@@ -63,4 +63,19 @@
         android:layout_height="1dp"
         android:background="@color/lightgray"></View>
 
+    <TextView
+        android:id="@+id/help_howtouse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:padding="20dp"
+        android:text="@string/help_howtouse"
+        android:textColor="@color/black" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightgray"></View>
+
 </LinearLayout>

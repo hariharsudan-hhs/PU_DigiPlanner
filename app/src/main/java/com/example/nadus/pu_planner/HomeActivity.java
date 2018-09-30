@@ -2,6 +2,7 @@ package com.example.nadus.pu_planner;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.example.nadus.pu_planner.HomeMenu.DrawerAdapter;
 import com.example.nadus.pu_planner.HomeMenu.DrawerItem;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_About;
+import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllContacts;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllEvents;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Calendar;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Contacts;
@@ -39,13 +41,14 @@ import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnItemSelectedListener {
 
-    private static final int POS_CALENDAR = 0;
-    private static final int POS_CONTACTS = 1;
-    private static final int POS_ALLEVENTS = 2;
-    private static final int POS_PROFILE = 3;
-    private static final int POS_SETTINGS = 4;
-    private static final int POS_ABOUT = 6;
-    private static final int POS_HELP = 7;
+    private static final int POS_MYCALENDAR = 0;
+    private static final int POS_ALLEVENTS = 1;
+    private static final int POS_MYCONTACTS = 2;
+    private static final int POS_ALLCONTACTS = 3;
+    private static final int POS_PROFILE = 4;
+    private static final int POS_SETTINGS = 5;
+    private static final int POS_ABOUT = 7;
+    private static final int POS_HELP = 8;
 
     private String[] screenTitles;
     private Drawable[] screenIcons;
@@ -60,6 +63,9 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+
+    private static final String BACK_STACK_ROOT_TAG = "fragment_calendar";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,9 +93,10 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         screenTitles = loadScreenTitles();
 
         DrawerAdapter adapter = new DrawerAdapter(Arrays.asList(
-                createItemFor(POS_CALENDAR).setChecked(true),
-                createItemFor(POS_CONTACTS),
+                createItemFor(POS_MYCALENDAR).setChecked(true),
                 createItemFor(POS_ALLEVENTS),
+                createItemFor(POS_MYCONTACTS),
+                createItemFor(POS_ALLCONTACTS),
                 createItemFor(POS_PROFILE),
                 createItemFor(POS_SETTINGS),
                 new SpaceItem(34),
@@ -102,7 +109,7 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
 
-        adapter.setSelected(POS_CALENDAR);
+        adapter.setSelected(POS_MYCALENDAR);
 
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
@@ -117,17 +124,21 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
         Fragment selectedScreen = null;
 
-        if(position == POS_CALENDAR)
+        if(position == POS_MYCALENDAR)
         {
             selectedScreen = new Fragment_Calendar();
-        }
-        else if(position == POS_CONTACTS)
-        {
-            selectedScreen = new Fragment_Contacts();
         }
         else if(position == POS_ALLEVENTS)
         {
             selectedScreen = new Fragment_AllEvents();
+        }
+        else if(position == POS_MYCONTACTS)
+        {
+            selectedScreen = new Fragment_Contacts();
+        }
+        else if(position == POS_ALLCONTACTS)
+        {
+            selectedScreen = new Fragment_AllContacts();
         }
         else if(position == POS_PROFILE)
         {
@@ -186,4 +197,11 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         return ContextCompat.getColor(this, res);
     }
 
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

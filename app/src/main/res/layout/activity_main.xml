@@ -32,7 +32,7 @@
                 android:paddingRight="75dp"
                 android:paddingTop="10dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/dplogo" />
+                app:srcCompat="@drawable/dplogowhite" />
 
         </com.github.florent37.arclayout.ArcLayout>
 

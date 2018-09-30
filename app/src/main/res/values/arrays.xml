@@ -3,8 +3,9 @@
 
     <string-array name="ld_activityScreenTitles">
         <item>My Calendar</item>
-        <item>Contacts</item>
-        <item>All Events</item>
+        <item>PU Calendar</item>
+        <item>My Contacts</item>
+        <item>PU Contacts</item>
         <item>Profile</item>
         <item>Settings</item>
         <item />
@@ -14,8 +15,9 @@
 
     <array name="ld_activityScreenIcons">
         <item>@drawable/ic_action_calendar_icon</item>
-        <item>@drawable/ic_action_contacts_icon</item>
         <item>@drawable/ic_action_academic_calendar</item>
+        <item>@drawable/ic_action_contacts_icon</item>
+        <item>@drawable/ic_action_all_contacts</item>
         <item>@drawable/ic_action_profile_icon</item>
         <item>@drawable/ic_action_settings_icon</item>
         <item>0</item>

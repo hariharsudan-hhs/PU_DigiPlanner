@@ -4,7 +4,7 @@
     <style name="AppTheme.Login" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/darkblue</item>
-        <item name="colorPrimaryDark">@color/statusbar_darkblue</item>
+        <item name="colorPrimaryDark">@color/darkblue</item>
         <item name="colorAccent">@color/lightgreen</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/statusbar_darkblue</item>

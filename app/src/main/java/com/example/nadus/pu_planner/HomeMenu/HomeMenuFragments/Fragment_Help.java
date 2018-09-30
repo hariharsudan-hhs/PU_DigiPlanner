@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
@@ -21,12 +22,16 @@ public class Fragment_Help extends Fragment {
 
     TextView help_faq, help_contactus, help_policy, help_appinfo;
 
+    NoInternetDialog noInternetDialog;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_help,container,false);
 
         HomeActivity.toolbar.setTitle("Help");
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
 
         help_faq = (TextView) v.findViewById(R.id.help_faq);
         help_contactus = (TextView) v.findViewById(R.id.help_contactus);
@@ -72,5 +77,11 @@ public class Fragment_Help extends Fragment {
 
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 }

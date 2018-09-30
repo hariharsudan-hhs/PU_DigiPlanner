@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     Calligrapher calligrapher;
 
     FirebaseAuth firebaseAuth;
+
+    NoInternetDialog noInternetDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this,HomeActivity.class));
         }
 
+        noInternetDialog = new NoInternetDialog.Builder(MainActivity.this).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
+
         getstarted = (Button) findViewById(R.id.getstarted);
 
         getstarted.setOnClickListener(new View.OnClickListener() {
@@ -43,5 +49,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 }

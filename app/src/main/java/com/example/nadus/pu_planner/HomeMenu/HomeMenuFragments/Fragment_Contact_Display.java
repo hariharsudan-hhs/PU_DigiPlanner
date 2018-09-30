@@ -2,12 +2,17 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +28,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Random;
+
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 import static com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Contacts.current_contact;
@@ -34,8 +42,10 @@ public class Fragment_Contact_Display extends Fragment {
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     TextView contact_card_name, contact_card_empid, contact_card_designation, contact_card_email_1, contact_card_email_2, contact_card_email_3, contact_card_number_1, contact_card_number_2, contact_card_number_3;
-    String current_contact_clicked;
+    String current_contact_clicked, contact_call_string;
     ProgressDialog progressDialog;
+
+    NoInternetDialog noInternetDialog;
 
     @Nullable
     @Override
@@ -47,6 +57,8 @@ public class Fragment_Contact_Display extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
 
         contact_card_name = (TextView) v.findViewById(R.id.contact_card_name);
         contact_card_empid = (TextView) v.findViewById(R.id.contact_card_empid);
@@ -78,54 +90,91 @@ public class Fragment_Contact_Display extends Fragment {
         contact_card_email_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",contact_card_email_1.getText().toString(), null));
-                getActivity().startActivity(intent);
+                String temp = contact_card_email_1.getText().toString();
+                if(temp.equals("nil")){}
+                else
+                {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",temp, null));
+                    getActivity().startActivity(intent);
+                }
             }
         });
 
         contact_card_email_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",contact_card_email_2.getText().toString(), null));
-                getActivity().startActivity(intent);
+                String temp = contact_card_email_2.getText().toString();
+                if(temp.equals("nil")){}
+                else
+                {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",temp, null));
+                    getActivity().startActivity(intent);
+                }
             }
         });
 
         contact_card_email_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",contact_card_email_3.getText().toString(), null));
-                getActivity().startActivity(intent);
+                String temp = contact_card_email_3.getText().toString();
+                if(temp.equals("nil")){}
+                else
+                {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",temp, null));
+                    getActivity().startActivity(intent);
+                }
             }
         });
 
         contact_card_number_1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(Intent.ACTION_DIAL);
-                intent2.setData(Uri.parse("tel:"+contact_card_number_1.getText().toString()));
-                getActivity().startActivity(intent2);
+
+                String temp = contact_card_number_1.getText().toString();
+                if(temp.equals("nil")){}
+                else
+                {
+                    Intent intent2 = new Intent(Intent.ACTION_DIAL);
+                    intent2.setData(Uri.parse("tel:"+temp));
+                    getActivity().startActivity(intent2);
+
+//                    Uri uri = Uri.parse("smsto:" + temp);
+//                    Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+//                    i.setPackage("com.whatsapp");
+//                    startActivity(i);
+                }
             }
         });
 
         contact_card_number_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(Intent.ACTION_DIAL);
-                intent2.setData(Uri.parse("tel:"+contact_card_number_2.getText().toString()));
-                getActivity().startActivity(intent2);
+                String temp = contact_card_number_2.getText().toString();
+                if(temp.equals("nil")){}
+                else
+                {
+                    Intent intent2 = new Intent(Intent.ACTION_DIAL);
+                    intent2.setData(Uri.parse("tel:"+temp));
+                    getActivity().startActivity(intent2);
+                }
             }
         });
 
         contact_card_number_3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(Intent.ACTION_DIAL);
-                intent2.setData(Uri.parse("tel:"+contact_card_number_3.getText().toString()));
-                getActivity().startActivity(intent2);
+                String temp = contact_card_number_3.getText().toString();
+                if(temp.equals("nil")){}
+                else
+                {
+                    Intent intent2 = new Intent(Intent.ACTION_DIAL);
+                    intent2.setData(Uri.parse("tel:"+temp));
+                    getActivity().startActivity(intent2);
+                }
             }
         });
     }
+
 
     private class MyTask extends AsyncTask<String, Integer, String>
     {
@@ -163,7 +212,12 @@ public class Fragment_Contact_Display extends Fragment {
 
             return null;
         }
-
-
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
+    }
+
 }

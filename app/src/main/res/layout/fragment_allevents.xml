@@ -21,7 +21,7 @@
                 android:paddingBottom="10dp">
 
                 <CalendarView
-                    android:id="@+id/calendarView"
+                    android:id="@+id/calendarView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
@@ -30,7 +30,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/current_day"
+                android:id="@+id/current_day2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="30dp"
@@ -41,7 +41,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/current_date"
+                android:id="@+id/current_date2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="20dp"
@@ -58,7 +58,7 @@
                 android:background="@color/lightgray"></View>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/calender_list"
+                android:id="@+id/calender_list2"
                 android:layout_width="match_parent"
                 android:layout_height="500dp" />
 

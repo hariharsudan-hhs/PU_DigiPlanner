@@ -45,6 +45,15 @@
     <string name="contact_card_heading">Contact Information</string>
     <string name="aboutme_empid">Employee ID</string>
     <string name="logout">LOG OUT</string>
+    <string name="reminder_heading">Event Details</string>
+    <string name="reminder_name">Event Name</string>
+    <string name="reminder_about">Event Description</string>
+    <string name="reminder_heading_2">Reminder Details</string>
+    <string name="reminder_date">Event Date</string>
+    <string name="reminder_time">Event Time</string>
+    <string name="reminder_heading_3">Alarm Details</string>
+    <string name="reminder_alarm">Alarm Status</string>
+    <string name="continue_button">Continue</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>
@@ -52,8 +61,66 @@
     </string-array>
 
     <string-array name="list_of_designation">
+        <item>Additional Internal Audit Officer</item>
+        <item>Assistant Dean</item>
+        <item>Assistant Director</item>
+        <item>Assitant Engineer</item>
+        <item>Assistant Librarian</item>
         <item>Assistant Professor</item>
+        <item>Assistant Professor &amp; Head</item>
+        <item>Assistant Registrar</item>
+        <item>Assistant Security Officer</item>
         <item>Associate Professor</item>
+        <item>Associate Professor &amp; Head</item>
+        <item>Care Taker</item>
+        <item>Centre Head</item>
+        <item>Chair Person</item>
+        <item>Chief Medical Officer</item>
+        <item>Chief Warden</item>
+        <item>Computer Information Scientist</item>
+        <item>Controller Of Examinations</item>
+        <item>Coordinator</item>
+        <item>Cultural Coordinator</item>
+        <item>Deputy Chief Warden</item>
+        <item>Deputy Coordinator</item>
+        <item>Deputy Librarian</item>
+        <item>Deputy Registrar</item>
+        <item>Dean</item>
+        <item>Director</item>
+        <item>Executive Engineer</item>
+        <item>Faculty in charge</item>
+        <item>Finance Officer</item>
+        <item>Head</item>
+        <item>Head &amp; Horticulturist</item>
+        <item>Instructor</item>
+        <item>Librarian</item>
+        <item>NCC Officer</item>
+        <item>Nodal Officer</item>
+        <item>Placement Officer</item>
+        <item>Pre-Primary Teacher</item>
+        <item>Private Secretary</item>
+        <item>Producer</item>
+        <item>Professional Assistant</item>
         <item>Professor</item>
+        <item>Professor &amp; Head</item>
+        <item>Professor &amp; Centre Head</item>
+        <item>Professor &amp; Dean</item>
+        <item>Professor &amp; Coordinator</item>
+        <item>Programmer</item>
+        <item>Reader</item>
+        <item>Registrar</item>
+        <item>Sanitary Inspector</item>
+        <item>Section Officer</item>
+        <item>Security Officer</item>
+        <item>Senior Programming Assitant</item>
+        <item>Senior Medical Officer</item>
+        <item>System Analyst</item>
+        <item>System Manager &amp; Head</item>
+        <item>Technician</item>
+        <item>Technical Officer</item>
+        <item>Training Officer</item>
+        <item>Univeristy Librarian</item>
+        <item>Vice Chancellor</item>
+        <item>Warden</item>
     </string-array>
 </resources>

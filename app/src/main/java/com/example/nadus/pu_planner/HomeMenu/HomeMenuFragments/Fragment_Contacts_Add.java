@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
@@ -35,6 +36,8 @@ public class Fragment_Contacts_Add extends Fragment {
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
 
+    NoInternetDialog noInternetDialog;
+
     String local_employeeid;
 
     @Nullable
@@ -43,6 +46,8 @@ public class Fragment_Contacts_Add extends Fragment {
         View v = inflater.inflate(R.layout.fragment_contacts_add,container,false);
 
         HomeActivity.toolbar.setTitle("Add a contact");
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
 
         contact_add_designation = (AutoCompleteTextView) v.findViewById(R.id.contact_add_designation);
         contact_add_name = (EditText) v.findViewById(R.id.contacts_add_name);
@@ -198,6 +203,12 @@ public class Fragment_Contacts_Add extends Fragment {
         contact_add_email_1.getText().clear();
         contact_add_email_2.getText().clear();
         contact_add_email_3.getText().clear();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 
 }

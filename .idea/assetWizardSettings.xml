@@ -19,8 +19,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\nadus\Downloads\icons8-calendar-1-50.png" />
-                                      <entry key="outputName" value="ic_action_academic_calendar" />
+                                      <entry key="imageAsset" value="C:\Users\nadus\Downloads\p_hide_password.png" />
+                                      <entry key="outputName" value="ic_action_hide_password" />
                                       <entry key="themeColor" value="1fddad" />
                                     </map>
                                   </option>

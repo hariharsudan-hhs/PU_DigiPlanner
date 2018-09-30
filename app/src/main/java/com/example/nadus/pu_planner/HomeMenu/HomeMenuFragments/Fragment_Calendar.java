@@ -1,7 +1,9 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,6 +44,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
@@ -67,17 +70,22 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     String[] days = new String[] { "","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
 
+    NoInternetDialog noInternetDialog;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_calendar,container,false);
 
-        HomeActivity.toolbar.setTitle("Calendar");
+        HomeActivity.toolbar.setTitle("My Calendar");
 
         progressDialog = new ProgressDialog(getActivity());
 
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
 
         calender_add_fab = (FloatingActionButton) v.findViewById(R.id.calender_add_fab);
         current_date = (TextView) v.findViewById(R.id.current_date);
@@ -98,6 +106,7 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         });
 
         today_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        selected_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
         current_date.setText(today_date);
 
@@ -198,18 +207,11 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
                         System.out.println("@@@@ MY TASK today_date_temp "+today_date_temp);
                         today_date_func();
                     }
-
-                    else if(dataSnapshot.hasChild(selected_date_temp))
-                    {
-                        System.out.println("@@@@ MY TASK today_date_temp "+selected_date_temp);
-                        selected_date_func();
-                    }
-
                     else
                     {
-                        Toast.makeText(getActivity(),"MY TASK No Event Available!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"No Event Available!",Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
-
                 }
 
                 @Override
@@ -296,6 +298,12 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 
 }

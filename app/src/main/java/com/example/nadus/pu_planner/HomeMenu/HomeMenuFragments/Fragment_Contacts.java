@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
@@ -57,6 +58,8 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
 
     ProgressDialog progressDialog;
 
+    NoInternetDialog noInternetDialog;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +70,8 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
 
         contact_add_fab = (FloatingActionButton) v.findViewById(R.id.contact_add_fab);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
@@ -165,4 +170,11 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
             return null;
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
+    }
+
 }

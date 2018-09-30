@@ -24,6 +24,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -38,6 +39,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 //    SharedPreferences pref;
 //    SharedPreferences.Editor editor;
+
+    NoInternetDialog noInternetDialog;
 
     ProgressDialog progressDialog;
 
@@ -56,6 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         //databaseReference2 = FirebaseDatabase.getInstance().getReference();
 
+        noInternetDialog = new NoInternetDialog.Builder(RegisterActivity.this).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
         register = (Button) findViewById(R.id.register);
         register_firstname = (EditText) findViewById(R.id.register_firstname);
         register_lastname = (EditText) findViewById(R.id.register_lastname);
@@ -70,9 +75,10 @@ public class RegisterActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
                 if(getValues())
                 {
+                    progressDialog.show();
+                    progressDialog.setCancelable(false);
                     createAccount();
                 }
                 else
@@ -173,9 +179,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else if(sPassword.length()<=8)
         {
-            Toast.makeText(RegisterActivity.this,"Password less than 8 characters!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this,"Password less than 9 characters!",Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 }

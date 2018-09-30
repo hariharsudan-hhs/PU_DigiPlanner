@@ -39,13 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|start"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingLeft="10dp">
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical|start"
                 android:orientation="horizontal">
@@ -58,7 +58,7 @@
 
                 <TextView
                     android:id="@+id/calendar_card_description"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
                     android:paddingLeft="10dp"
@@ -71,7 +71,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:gravity="left|center_vertical|start"
                 android:orientation="horizontal">
@@ -84,7 +83,7 @@
 
                 <TextView
                     android:id="@+id/calendar_card_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="10dp"
                     android:paddingLeft="10dp"

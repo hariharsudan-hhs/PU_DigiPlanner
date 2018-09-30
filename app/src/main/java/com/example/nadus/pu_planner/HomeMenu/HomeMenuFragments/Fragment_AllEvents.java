@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
+import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Calendar;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Calendar;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,25 +36,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
-public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_Calendar.ItemClickListener{
+public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_All_Calendar.ItemClickListener{
 
     Calligrapher calligrapher;
-    String today_date="", selected_date="", selected_day, today_date_temp = "", selected_date_temp = "", current_user;
-    TextView current_date, current_day;
-    CalendarView calendarView;
-    RecyclerView recyclerView;
-    RecyclerViewAdapter_Calendar adapter;
+    String today_date2="", selected_date2="", selected_day2, today_date_temp2 = "", selected_date_temp2 = "", current_user2;
+    TextView current_date2, current_day2;
+    CalendarView calendarView2;
+    RecyclerView recyclerView2;
+    RecyclerViewAdapter_All_Calendar adapter2;
+
+    NoInternetDialog noInternetDialog;
 
     FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference, databaseReference2;
+    DatabaseReference databaseReference_allevents, databaseReference_allevents_2;
 
-    List<String> time_list = new ArrayList<String>();
-    List<String> name_list = new ArrayList<String>();
-    List<String> description_list = new ArrayList<String>();
-    List<String> status_list = new ArrayList<String>();
+    List<String> time_list2 = new ArrayList<String>();
+    List<String> name_list2 = new ArrayList<String>();
+    List<String> description_list2 = new ArrayList<String>();
+    List<String> status_list2 = new ArrayList<String>();
 
     ProgressDialog progressDialog;
 
@@ -71,20 +75,24 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        current_date = (TextView) v.findViewById(R.id.current_date);
-        current_day = (TextView) v.findViewById(R.id.current_day);
-        calendarView = (CalendarView) v.findViewById(R.id.calendarView);
-        recyclerView = (RecyclerView) v.findViewById(R.id.calender_list);
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
+        current_date2 = (TextView) v.findViewById(R.id.current_date2);
+        current_day2 = (TextView) v.findViewById(R.id.current_day2);
+        calendarView2 = (CalendarView) v.findViewById(R.id.calendarView2);
+        recyclerView2 = (RecyclerView) v.findViewById(R.id.calender_list2);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference2 = FirebaseDatabase.getInstance().getReference();
+        databaseReference_allevents = FirebaseDatabase.getInstance().getReference();
+        databaseReference_allevents_2 = FirebaseDatabase.getInstance().getReference();
 
-        today_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        today_date2 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+        selected_date2 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
-        current_date.setText(today_date);
+        current_date2.setText(today_date2);
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView2.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
 
@@ -92,15 +100,15 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 //                progressDialog2.show();
 
                 progressDialog.show();
-                today_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+                today_date2 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
-                time_list.clear();
-                name_list.clear();
-                description_list.clear();
-                status_list.clear();
+                time_list2.clear();
+                name_list2.clear();
+                description_list2.clear();
+                status_list2.clear();
 
                 //Toast.makeText(getActivity(),"Selected Date : "+String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year,Toast.LENGTH_SHORT).show();
-                selected_date = String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year;
+                selected_date2 = String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year;
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
@@ -108,22 +116,22 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
                 System.out.println("@@@@ day is "+days[dayOfWeek]);
 
-                selected_day = days[dayOfWeek];
+                selected_day2 = days[dayOfWeek];
 
-                System.out.println("@@@@ today date "+today_date+" selected date "+selected_date);
+                System.out.println("@@@@ today date "+today_date2+" selected date "+selected_date2);
 
-                if(today_date.equals(selected_date))
+                if(today_date2.equals(selected_date2))
                 {
-                    current_day.setText("TODAY");
-                    current_date.setText(selected_date);
-                    today_date_temp = today_date.replace("/","_");
+                    current_day2.setText("TODAY");
+                    current_date2.setText(selected_date2);
+                    today_date_temp2 = today_date2.replace("/","_");
                     today_date_func();
                 }
                 else
                 {
-                    current_day.setText(selected_day);
-                    current_date.setText(selected_date);
-                    selected_date_temp = selected_date.replace("/","_");
+                    current_day2.setText(selected_day2);
+                    current_date2.setText(selected_date2);
+                    selected_date_temp2 = selected_date2.replace("/","_");
                     selected_date_func();
                 }
 
@@ -131,12 +139,12 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
             }
         });
 
-        time_list.clear();
-        name_list.clear();
-        description_list.clear();
-        status_list.clear();
+        time_list2.clear();
+        name_list2.clear();
+        description_list2.clear();
+        status_list2.clear();
 
-        new MyTask().execute();
+        new MyTask_allevents().execute();
 
         return v;
     }
@@ -150,47 +158,40 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new RecyclerViewAdapter_Calendar(getActivity(), time_list, name_list, description_list, status_list);
-        adapter.setClickListener(this);
+        recyclerView2.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerView2.setLayoutManager(mLayoutManager);
+        recyclerView2.setItemAnimator(new DefaultItemAnimator());
+        adapter2 = new RecyclerViewAdapter_All_Calendar(getActivity(), time_list2, name_list2, description_list2, status_list2);
+        adapter2.setClickListener(this);
         //recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "You clicked " + adapter2.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
-    private class MyTask extends AsyncTask<String, Integer, String>
+    private class MyTask_allevents extends AsyncTask<String, Integer, String>
     {
         @Override
         protected String doInBackground(String... strings) {
 
-            today_date_temp = today_date.replace("/","_");
+            today_date_temp2 = today_date2.replace("/","_");
 
-            databaseReference = databaseReference.child("AllEventDiary");
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            databaseReference_allevents = databaseReference_allevents.child("AllEventDiary");
+            databaseReference_allevents.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.hasChild(today_date_temp))
+                    if(dataSnapshot.hasChild(today_date_temp2))
                     {
-                        System.out.println("@@@@ MY TASK today_date_temp "+today_date_temp);
+                        System.out.println("@@@@ MY TASK today_date_temp "+today_date_temp2);
                         today_date_func();
                     }
-
-                    else if(dataSnapshot.hasChild(selected_date_temp))
-                    {
-                        System.out.println("@@@@ MY TASK today_date_temp "+selected_date_temp);
-                        selected_date_func();
-                    }
-
                     else
                     {
-                        Toast.makeText(getActivity(),"MY TASK No Event Available!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"No Event Available!",Toast.LENGTH_SHORT).show();
                     }
-
+                    progressDialog.dismiss();
                 }
 
                 @Override
@@ -206,30 +207,30 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
     private void today_date_func()
     {
 
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("AllEventDiary").child(today_date_temp);
+        DatabaseReference databaseReference1_allevents = FirebaseDatabase.getInstance().getReference().child("AllEventDiary").child(today_date_temp2);
 
-        System.out.println("!!!! today_date_fucn() db path is "+databaseReference1);
+        System.out.println("!!!! today_date_fucn() db path is "+databaseReference1_allevents);
 
-        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference1_allevents.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
-                    time_list.add(eventAdapter.getsTimepicker());
-                    name_list.add(eventAdapter.getsCalendername());
-                    description_list.add(eventAdapter.getsCalenderdescription());
-                    status_list.add("Available");
-                    System.out.println("@@@@ event adapter values " + time_list);
+                    time_list2.add(eventAdapter.getsTimepicker());
+                    name_list2.add(eventAdapter.getsCalendername());
+                    description_list2.add(eventAdapter.getsCalenderdescription());
+                    status_list2.add("Available");
+                    System.out.println("@@@@ event adapter values " + time_list2);
                 }
-                if(time_list.isEmpty())
+                if(time_list2.isEmpty())
                 {
                     Toast.makeText(getActivity(),"No Event Available!",Toast.LENGTH_SHORT).show();
-                    recyclerView.setAdapter(adapter);
+                    recyclerView2.setAdapter(adapter2);
                 }
                 else
                 {
-                    recyclerView.setAdapter(adapter);
+                    recyclerView2.setAdapter(adapter2);
                 }
                 progressDialog.dismiss();
             }
@@ -244,29 +245,29 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
     private void selected_date_func()
     {
-        DatabaseReference databaseReference2 = FirebaseDatabase.getInstance().getReference().child("AllEventDiary").child(selected_date_temp);
+        DatabaseReference databaseReference2_allevents = FirebaseDatabase.getInstance().getReference().child("AllEventDiary").child(selected_date_temp2);
 
-        System.out.println("!!!! selected_date_fucn() db path is "+databaseReference2);
+        System.out.println("!!!! selected_date_fucn() db path is "+databaseReference2_allevents);
 
-        databaseReference2.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference2_allevents.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
-                    time_list.add(eventAdapter.getsTimepicker());
-                    name_list.add(eventAdapter.getsCalendername());
-                    description_list.add(eventAdapter.getsCalenderdescription());
-                    status_list.add("Available");
-                    System.out.println("@@@@ event adapter values " + time_list);
+                    time_list2.add(eventAdapter.getsTimepicker());
+                    name_list2.add(eventAdapter.getsCalendername());
+                    description_list2.add(eventAdapter.getsCalenderdescription());
+                    status_list2.add("Available");
+                    System.out.println("@@@@ event adapter values " + time_list2);
                 }
-                if(time_list.isEmpty())
+                if(time_list2.isEmpty())
                 {
                     Toast.makeText(getActivity(),"No Event Available!",Toast.LENGTH_SHORT).show();
-                    recyclerView.setAdapter(adapter);
+                    recyclerView2.setAdapter(adapter2);
                 }
                 else
                 {
-                    recyclerView.setAdapter(adapter);
+                    recyclerView2.setAdapter(adapter2);
                 }
                 progressDialog.dismiss();
             }
@@ -277,6 +278,12 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 
 }

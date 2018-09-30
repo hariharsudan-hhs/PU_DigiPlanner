@@ -60,7 +60,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_name"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
                     <TextView
                         android:id="@+id/about_me_name"
@@ -90,7 +90,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_empid"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
                     <TextView
                         android:id="@+id/about_me_empid"
@@ -120,7 +120,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_email"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
                     <TextView
                         android:id="@+id/about_me_email"
@@ -150,7 +150,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_mobile"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
                     <TextView
                         android:id="@+id/about_me_mobile"
@@ -196,19 +196,38 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_password"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
-                    <TextView
-                        android:id="@+id/about_me_password"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="10dp"
-                        android:text="TextView"
-                        android:textColor="@color/black" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/about_me_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.95"
+                            android:paddingBottom="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="10dp"
+                            android:text="TextView"
+                            android:textColor="@color/black" />
+
+                        <ImageView
+                            android:id="@+id/password_switch"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:adjustViewBounds="true"
+                            android:scaleType="center"
+                            app:srcCompat="@drawable/ic_action_show_password" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
@@ -226,7 +245,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_language"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
                     <TextView
                         android:id="@+id/about_me_language"
@@ -257,10 +276,10 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_status"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/darkblue" />
 
                     <TextView
-                        android:id="@+id/textView11"
+                        android:id="@+id/app_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

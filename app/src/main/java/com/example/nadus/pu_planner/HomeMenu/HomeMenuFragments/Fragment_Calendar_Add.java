@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
@@ -33,15 +34,18 @@ public class Fragment_Calendar_Add extends Fragment {
     Calligrapher calligrapher;
 
     EditText calendar_event_add_dp, calendar_event_add_tp, calender_add_name, calender_add_description;
-    String sCalendername, sCalenderdescription, sDatepicker, sTimepicker;
+    static String sCalendername, sCalenderdescription, sDatepicker, sTimepicker, mAMPM, sNormal_time;
     private int mYear, mMonth, mDay, mHour, mMinute;
-    private String mAMPM;
-    Button add_event;
+    Button continue_button;
+
+    int temp_hourOfDay;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
 
     ProgressDialog progressDialog;
+
+    NoInternetDialog noInternetDialog;
 
     @Nullable
     @Override
@@ -56,11 +60,13 @@ public class Fragment_Calendar_Add extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
 
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
         calendar_event_add_dp = (EditText) v.findViewById(R.id.calendar_event_add_dp);
         calendar_event_add_tp = (EditText) v.findViewById(R.id.calendar_event_add_tp);
         calender_add_name = (EditText) v.findViewById(R.id.calender_add_name);
         calender_add_description = (EditText) v.findViewById(R.id.calender_add_description);
-        add_event = (Button) v.findViewById(R.id.add_event);
+        continue_button = (Button) v.findViewById(R.id.continue_button);
 
         calendar_event_add_dp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,13 +113,13 @@ public class Fragment_Calendar_Add extends Fragment {
                                 if(hourOfDay < 12) {
                                     mAMPM = "AM";
                                 } else {
-                                    hourOfDay = hourOfDay - 12;
+                                    temp_hourOfDay = hourOfDay-12;
                                     mAMPM = "PM";
                                 }
-
-                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute) + " " + mAMPM);
+                                sNormal_time = (String.format("%02d",temp_hourOfDay) + ":" + String.format("%02d",minute) +" "+ mAMPM);
+                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
                             }
-                        }, mHour, mMinute, false);
+                        }, mHour, mMinute, true);
                 timePickerDialog.show();
             }
         });
@@ -130,35 +136,41 @@ public class Fragment_Calendar_Add extends Fragment {
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
 
-        add_event.setOnClickListener(new View.OnClickListener() {
+        continue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(getValues())
                 {
-                    progressDialog.show();
-                    updateValueinDB();
-                    Toast.makeText(getActivity(),"Success!",Toast.LENGTH_SHORT).show();
+                    updateValueToNext();
                 }
             }
         });
+
+//        add_event.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(getValues())
+//                {
+//                    progressDialog.show();
+//                    updateValueinDB();
+//                    Toast.makeText(getActivity(),"Success!",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
-    private void updateValueinDB()
+    private void updateValueToNext()
     {
-        EventAdapter eventAdapter = new EventAdapter();
-        eventAdapter.setsCalendername(sCalendername);
-        eventAdapter.setsCalenderdescription(sCalenderdescription);
-        eventAdapter.setsDatepicker(sDatepicker);
-        eventAdapter.setsTimepicker(sTimepicker);
+        getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Calendar_Add_Reminder()).addToBackStack(null).commit();
 
-        String current_user = firebaseAuth.getCurrentUser().getEmail();
-        current_user = current_user.replace(".","_");
-
-        sDatepicker = sDatepicker.replace("/","_");
-        sTimepicker = sTimepicker.replace(":","_");
-
-        databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(sDatepicker).child(sCalendername).setValue(eventAdapter);
-        clearAll();
+//        String current_user = firebaseAuth.getCurrentUser().getEmail();
+//        current_user = current_user.replace(".","_");
+//
+//        sDatepicker = sDatepicker.replace("/","_");
+//        sTimepicker = sTimepicker.replace(":","_");
+//
+//        databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(sDatepicker).child(sCalendername).setValue(eventAdapter);
+//        clearAll();
         progressDialog.dismiss();
     }
 
@@ -199,4 +211,11 @@ public class Fragment_Calendar_Add extends Fragment {
         calendar_event_add_dp.getText().clear();
         calendar_event_add_tp.getText().clear();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
+    }
+
 }

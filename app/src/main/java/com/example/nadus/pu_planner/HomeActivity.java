@@ -1,6 +1,8 @@
 package com.example.nadus.pu_planner;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -150,7 +152,7 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
     private void showFragment(Fragment fragment) {
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
+                .replace(R.id.container, fragment).addToBackStack(null)
                 .commit();
     }
 

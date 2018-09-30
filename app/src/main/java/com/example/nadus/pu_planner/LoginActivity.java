@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class LoginActivity extends AppCompatActivity {
@@ -32,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
+    NoInternetDialog noInternetDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        noInternetDialog = new NoInternetDialog.Builder(LoginActivity.this).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
         login = (Button) findViewById(R.id.login);
         register = (Button) findViewById(R.id.register);
         login_email = (EditText) findViewById(R.id.login_email);
@@ -53,15 +58,16 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
                 if(getValues())
                 {
+                    progressDialog.show();
                     Toast.makeText(LoginActivity.this,"Login Successful!",Toast.LENGTH_SHORT).show();
                     validateCredentials();
                 }
                 else
                 {
                     Toast.makeText(LoginActivity.this,"Login Failed!",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
 
             }
@@ -89,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 else
                 {
                     Toast.makeText(LoginActivity.this,"Incorrect Credentials!",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
             }
         });
@@ -111,5 +118,11 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 }

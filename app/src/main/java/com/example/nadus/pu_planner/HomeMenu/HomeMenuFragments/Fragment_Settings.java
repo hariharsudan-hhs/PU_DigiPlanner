@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
 public class Fragment_Settings extends Fragment {
 
     Calligrapher calligrapher;
-
+    NoInternetDialog noInternetDialog;
 
     @Nullable
     @Override
@@ -24,6 +25,9 @@ public class Fragment_Settings extends Fragment {
         View v = inflater.inflate(R.layout.fragment_settings,container,false);
 
         HomeActivity.toolbar.setTitle("Settings");
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
 
         return v;
     }
@@ -34,5 +38,11 @@ public class Fragment_Settings extends Fragment {
 
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 }

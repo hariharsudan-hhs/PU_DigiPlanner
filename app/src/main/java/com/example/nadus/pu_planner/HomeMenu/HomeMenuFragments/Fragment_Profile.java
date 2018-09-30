@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.RegisterAdapter;
@@ -25,18 +28,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
 public class Fragment_Profile extends Fragment {
 
     Calligrapher calligrapher;
-    TextView about_me_name, about_me_empid, about_me_email, about_me_mobile, about_me_password, about_me_language, about_me_logout;
+    TextView about_me_name, about_me_empid, about_me_email, about_me_mobile, about_me_password, about_me_language, about_me_logout, app_status;
 
     FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference, databaseReference2;
 
     ProgressDialog progressDialog;
+
+    ImageView password_switch;
+
+    NoInternetDialog noInternetDialog;
+
+    Boolean lol = true;
+    private String temp = "";
 
     @Nullable
     @Override
@@ -49,8 +60,11 @@ public class Fragment_Profile extends Fragment {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference2 = FirebaseDatabase.getInstance().getReference();
 
         about_me_name = (TextView) v.findViewById(R.id.about_me_name);
         about_me_empid = (TextView) v.findViewById(R.id.about_me_empid);
@@ -58,6 +72,12 @@ public class Fragment_Profile extends Fragment {
         about_me_mobile = (TextView) v.findViewById(R.id.about_me_mobile);
         about_me_password = (TextView) v.findViewById(R.id.about_me_password);
         about_me_logout = (TextView) v.findViewById(R.id.about_me_logout);
+        app_status = (TextView) v.findViewById(R.id.app_status);
+
+
+        about_me_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+        password_switch = (ImageView) v.findViewById(R.id.password_switch);
 
         new MyTask().execute();
 
@@ -94,6 +114,22 @@ public class Fragment_Profile extends Fragment {
                 dialog.show();
             }
         });
+
+        password_switch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(lol) {
+                    password_switch.setImageResource(R.drawable.ic_action_hide_password);
+                    about_me_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    lol = false;
+                }
+                else {
+                    password_switch.setImageResource(R.drawable.ic_action_show_password);
+                    about_me_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    lol = true;
+                }
+            }
+        });
     }
 
     private class MyTask extends AsyncTask<String, Integer, String>
@@ -127,5 +163,11 @@ public class Fragment_Profile extends Fragment {
 
             return null;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        noInternetDialog.onDestroy();
     }
 }

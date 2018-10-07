@@ -73,6 +73,7 @@ public class Fragment_Help extends Fragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(),"How to use the app",Toast.LENGTH_SHORT).show();
+                getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Help_Howtouse()).addToBackStack(null).commit();
             }
         });
 

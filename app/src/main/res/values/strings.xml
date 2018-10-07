@@ -59,6 +59,18 @@
     <string name="settings_vcf_generation">Generate VCF</string>
     <string name="settings_language">Choose app language</string>
     <string name="help_howtouse">How to use the app</string>
+    <string name="heading_1">My Calendar</string>
+    <string name="passage_1">My Calendar consists of a basic calendar view with all your events listed based on date. You can <b>click an event</b> and see a detailed descriptive view of the event. You can <b>delete an event</b> by long pressing it. You can <b>add a new event</b> by clicking on the <b>\'+\'</b> icon on the bottom right cornor of the screen.</string>
+    <string name="heading_2">PU Calendar</string>
+    <string name="passage_2">PU Calendar consists of all the events of Pondicherry University created by the Admin Team. You can even <b>set your own reminder</b> for those events individually. \n\n<i>Note : These events are Official Events of Pondicherry University and cannot be deleted/modified by you.</i></string>
+    <string name="heading_3">My Contacts</string>
+    <string name="passage_3">My Contacts page consists of all user created contacts. You can click on each contact and view their basic contact information. You can even <b>call/email</b> them directly from the application by clicking on their <b>number/email</b> address.</string>
+    <string name="heading_4">PU Contacts</string>
+    <string name="passage_4">PU Contacts consists of all Pondicherry University contacts created by the Admin Team based on <b>department/roles/designation</b> etc. You can <b>view/call/email</b> any contacts from inside the application. \n\n<i>Note : These contacts are Official Contacts of Pondicherry University and cannot be deleted/modified by you.</i></string>
+    <string name="heading_5">Profile</string>
+    <string name="passage_5">This page displays your basic information and the status of the application i.e., <b>Active/Inactive/Under Maintanance.</b></string>
+    <string name="heading_6">Settings</string>
+    <string name="passage_6">This page contains additional operations like <b>event pdf generation, vcf generation</b> etc. It also has the option of changing language of the application.</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>

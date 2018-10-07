@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
@@ -28,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 import java.util.Random;
 
 import am.appwise.components.ni.NoInternetDialog;
@@ -95,7 +100,8 @@ public class Fragment_Contact_Display extends Fragment {
                 else
                 {
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",temp, null));
-                    getActivity().startActivity(intent);
+                    Intent chooser = Intent.createChooser(intent,"");
+                    getActivity().startActivity(chooser);
                 }
             }
         });
@@ -108,7 +114,8 @@ public class Fragment_Contact_Display extends Fragment {
                 else
                 {
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",temp, null));
-                    getActivity().startActivity(intent);
+                    Intent chooser = Intent.createChooser(intent,"");
+                    getActivity().startActivity(chooser);
                 }
             }
         });
@@ -121,7 +128,8 @@ public class Fragment_Contact_Display extends Fragment {
                 else
                 {
                     Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",temp, null));
-                    getActivity().startActivity(intent);
+                    Intent chooser = Intent.createChooser(intent,"");
+                    getActivity().startActivity(chooser);
                 }
             }
         });
@@ -136,12 +144,14 @@ public class Fragment_Contact_Display extends Fragment {
                 {
                     Intent intent2 = new Intent(Intent.ACTION_DIAL);
                     intent2.setData(Uri.parse("tel:"+temp));
-                    getActivity().startActivity(intent2);
+                    Intent chooser = Intent.createChooser(intent2,"");
+                    getActivity().startActivity(chooser);
 
 //                    Uri uri = Uri.parse("smsto:" + temp);
 //                    Intent i = new Intent(Intent.ACTION_SENDTO, uri);
 //                    i.setPackage("com.whatsapp");
 //                    startActivity(i);
+
                 }
             }
         });
@@ -155,7 +165,8 @@ public class Fragment_Contact_Display extends Fragment {
                 {
                     Intent intent2 = new Intent(Intent.ACTION_DIAL);
                     intent2.setData(Uri.parse("tel:"+temp));
-                    getActivity().startActivity(intent2);
+                    Intent chooser = Intent.createChooser(intent2,"");
+                    getActivity().startActivity(chooser);
                 }
             }
         });
@@ -169,7 +180,8 @@ public class Fragment_Contact_Display extends Fragment {
                 {
                     Intent intent2 = new Intent(Intent.ACTION_DIAL);
                     intent2.setData(Uri.parse("tel:"+temp));
-                    getActivity().startActivity(intent2);
+                    Intent chooser = Intent.createChooser(intent2,"");
+                    getActivity().startActivity(chooser);
                 }
             }
         });

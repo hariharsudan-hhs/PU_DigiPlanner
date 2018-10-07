@@ -71,7 +71,7 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
         contact_add_fab = (FloatingActionButton) v.findViewById(R.id.contact_add_fab);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);

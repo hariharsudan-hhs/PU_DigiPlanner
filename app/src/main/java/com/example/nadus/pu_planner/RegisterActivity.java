@@ -59,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         //databaseReference2 = FirebaseDatabase.getInstance().getReference();
 
-        noInternetDialog = new NoInternetDialog.Builder(RegisterActivity.this).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+        noInternetDialog = new NoInternetDialog.Builder(RegisterActivity.this).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
         register = (Button) findViewById(R.id.register);
         register_firstname = (EditText) findViewById(R.id.register_firstname);

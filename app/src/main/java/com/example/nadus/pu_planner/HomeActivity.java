@@ -171,8 +171,8 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         return new SimpleItem(screenIcons[position], screenTitles[position])
                 .withIconTint(color(R.color.textColorSecondary))
                 .withTextTint(color(R.color.textColorPrimary))
-                .withSelectedIconTint(color(R.color.lightgreen))
-                .withSelectedTextTint(color(R.color.lightgreen));
+                .withSelectedIconTint(color(R.color.colorAccent))
+                .withSelectedTextTint(color(R.color.colorAccent));
     }
 
     private String[] loadScreenTitles() {

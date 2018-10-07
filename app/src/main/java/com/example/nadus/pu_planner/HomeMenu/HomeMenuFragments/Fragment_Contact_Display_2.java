@@ -51,7 +51,7 @@ public class Fragment_Contact_Display_2 extends Fragment {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
         contact_card_name = (TextView) v.findViewById(R.id.contact_card_name);
         contact_card_empid = (TextView) v.findViewById(R.id.contact_card_empid);

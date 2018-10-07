@@ -26,7 +26,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/darkblue"
+                android:background="@color/colorPrimary"
                 android:paddingBottom="50dp"
                 android:paddingLeft="75dp"
                 android:paddingRight="75dp"
@@ -67,7 +67,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="@string/welcometo"
-                android:textColor="@color/darkblue"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
     public List<String> mData4;
     public LayoutInflater mInflater;
     public ItemClickListener mClickListener;
+
 
     // data is passed into the constructor
     public RecyclerViewAdapter_Calendar(Context context, List<String> data, List<String> data2, List<String> data3, List<String> data4) {
@@ -64,7 +66,7 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         TextView calendar_card_time, calendar_card_name, calendar_card_description, calendar_card_status;
 
         ViewHolder(View itemView) {
@@ -75,12 +77,28 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
             calendar_card_status = itemView.findViewById(R.id.calendar_card_status);
 
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            if(mClickListener != null) mClickListener.onLongClick(view, getAdapterPosition());
+
+            return true;
+        }
+
+//        @Override
+//        public boolean onLongClick(View view) {
+//            if(mLongClickListener != null) {
+//                mLongClickListener.onItemLongClick(AdapterView.OnItemLongClickListener ,view, getAdapterPosition());
+//                return true;
+//            }
+//        }
     }
 
     // convenience method for getting data at click position
@@ -96,5 +114,6 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+        void onLongClick(View view, int position);
     }
 }

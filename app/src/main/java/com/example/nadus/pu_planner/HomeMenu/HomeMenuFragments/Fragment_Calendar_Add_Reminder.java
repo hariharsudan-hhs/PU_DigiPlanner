@@ -70,7 +70,7 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
         progressDialog2.setMessage("Loading...");
         progressDialog2.show();
 
-        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
         reminder_set_event_name = (TextView) v.findViewById(R.id.reminder_set_event_name);
         reminder_set_event_description = (TextView) v.findViewById(R.id.reminder_set_event_description);

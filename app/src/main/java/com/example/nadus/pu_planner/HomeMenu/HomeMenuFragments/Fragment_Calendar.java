@@ -66,7 +66,7 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
     List<String> description_list = new ArrayList<String>();
     List<String> status_list = new ArrayList<String>();
 
-    ProgressDialog progressDialog;
+    ProgressDialog progressDialog, progressDialog2;
 
     String[] days = new String[] { "","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
 
@@ -84,7 +84,11 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.lightgreen)).build();
+        progressDialog2 = new ProgressDialog(getActivity());
+
+        progressDialog2.setMessage("Deleting...");
+
+        noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
 
         calender_add_fab = (FloatingActionButton) v.findViewById(R.id.calender_add_fab);
@@ -186,7 +190,30 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + (position+1), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLongClick(View view, final int position) {
+        Toast.makeText(getActivity(), "You long clicked " + adapter.getItem(position) + " on row number " + (position+1), Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Warning!");
+        builder.setMessage("Delete this event?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog2.show();
+                new MyTask_deleteEvent(position, current_date.getText().toString()).execute();
+            }
+        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     private class MyTask extends AsyncTask<String, Integer, String>
@@ -298,6 +325,47 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
             }
         });
 
+    }
+
+    private class MyTask_deleteEvent extends AsyncTask<String, Integer, String>{
+
+        int position;
+        String clicked_date;
+        public MyTask_deleteEvent(int position, String date) {
+            this.position = position;
+            this.clicked_date = date;
+            System.out.println("@@@@@ "+name_list.get(position)+ " "+clicked_date);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            clicked_date = clicked_date.replace("/", "_");
+            DatabaseReference databaseReference_del = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(clicked_date).child(name_list.get(position));
+            System.out.println("^^^^ "+databaseReference_del);
+            databaseReference_del.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        System.out.println("%%%% removing " + dataSnapshot1.getKey());
+                        dataSnapshot1.getRef().removeValue();
+                    }
+                    name_list.remove(position);
+                    description_list.remove(position);
+                    time_list.remove(position);
+                    status_list.remove(position);
+                    adapter.notifyItemRemoved(position);
+                    progressDialog2.dismiss();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
     }
 
     @Override

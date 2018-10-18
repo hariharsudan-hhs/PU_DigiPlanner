@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -53,7 +54,7 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
     Calligrapher calligrapher;
     FloatingActionButton calendar_add_fab;
     String today_date="", selected_date="", selected_day, today_date_temp = "", selected_date_temp = "", current_user;
-    TextView current_date, current_day;
+    TextView current_date, current_day, b_name, b_description, b_datetime;
     CalendarView calendarView;
     RecyclerView recyclerView;
     RecyclerViewAdapter_Calendar adapter;
@@ -187,6 +188,18 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     @Override
     public void onItemClick(View view, int position) {
+        View bottom_view = getActivity().getLayoutInflater().inflate(R.layout.event_bottom_sheet, null);
+        b_name = (TextView) bottom_view.findViewById(R.id.b_name);
+        b_description = (TextView) bottom_view.findViewById(R.id.b_description);
+        b_datetime = (TextView) bottom_view.findViewById(R.id.b_datetime);
+
+        b_name.setText(name_list.get(position));
+        b_description.setText(description_list.get(position));
+        b_datetime.setText(current_date.getText().toString() + " ("+current_day.getText().toString()+") at "+time_list.get(position));
+        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+        dialog.setContentView(bottom_view);
+        dialog.show();
+
     }
 
     @Override

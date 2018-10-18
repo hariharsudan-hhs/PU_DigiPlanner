@@ -1,11 +1,14 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Calendar;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Calendar;
@@ -44,7 +48,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
     Calligrapher calligrapher;
     String today_date2="", selected_date2="", selected_day2, today_date_temp2 = "", selected_date_temp2 = "", current_user2;
-    TextView current_date2, current_day2;
+    TextView current_date2, current_day2, b_name, b_description, b_datetime;
     CalendarView calendarView2;
     RecyclerView recyclerView2;
     RecyclerViewAdapter_All_Calendar adapter2;
@@ -63,6 +67,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
     ProgressDialog progressDialog;
 
     String[] days = new String[] { "","SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
+    private String status = "";
 
     @Nullable
     @Override
@@ -76,6 +81,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
+        new MyTask_statusCheck().execute();
 
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
@@ -169,7 +175,17 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter2.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        View bottom_view = getActivity().getLayoutInflater().inflate(R.layout.event_bottom_sheet, null);
+        b_name = (TextView) bottom_view.findViewById(R.id.b_name);
+        b_description = (TextView) bottom_view.findViewById(R.id.b_description);
+        b_datetime = (TextView) bottom_view.findViewById(R.id.b_datetime);
+
+        b_name.setText(name_list2.get(position));
+        b_description.setText(description_list2.get(position));
+        b_datetime.setText(current_date2.getText().toString() + " ("+current_day2.getText().toString()+") at "+time_list2.get(position));
+        BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
+        dialog.setContentView(bottom_view);
+        dialog.show();
     }
 
     private class MyTask_allevents extends AsyncTask<String, Integer, String>
@@ -280,7 +296,44 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
             }
         });
+    }
 
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseDatabase.getInstance().getReference().child("Z_ApplicationStatus").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    status = statusAdapter.getStatus();
+                    statusCheck(status);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+    private void statusCheck(String status){
+        if(status.equals("Inactive")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Status");
+            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     @Override

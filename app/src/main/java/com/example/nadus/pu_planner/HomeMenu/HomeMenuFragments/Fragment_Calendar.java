@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,9 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Calendar;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Contacts;
+import com.example.nadus.pu_planner.LoginActivity;
+import com.example.nadus.pu_planner.MainActivity;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -53,7 +57,7 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     Calligrapher calligrapher;
     FloatingActionButton calendar_add_fab;
-    String today_date="", selected_date="", selected_day, today_date_temp = "", selected_date_temp = "", current_user;
+    String today_date="", selected_date="", selected_day, today_date_temp = "", selected_date_temp = "", current_user, status = "";
     TextView current_date, current_day, b_name, b_description, b_datetime;
     CalendarView calendarView;
     RecyclerView recyclerView;
@@ -80,6 +84,7 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
         HomeActivity.toolbar.setTitle("My Calendar");
 
+        new MyTask_statusCheck().execute();
         progressDialog = new ProgressDialog(getActivity());
 
         progressDialog.setMessage("Loading...");
@@ -378,41 +383,43 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         }
     }
 
-//    private class MyTask_editEvent extends AsyncTask<String, Integer, String>{
-//
-//        int position;
-//        String clicked_date;
-//        public MyTask_editEvent(int position, String date) {
-//            this.position = position;
-//            this.clicked_date = date;
-//            System.out.println("@@@@@ "+name_list.get(position)+ " "+clicked_date);
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... strings) {
-//
-//            clicked_date = clicked_date.replace("/", "_");
-//            DatabaseReference databaseReference_edit = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(clicked_date).child(name_list.get(position));
-//            System.out.println("^^^^ "+databaseReference_edit);
-//            databaseReference_edit.addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-//                        System.out.println("%%%% editing " + dataSnapshot1.getKey());
-//                        EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
-//                    }
-//                    progressDialog2.dismiss();
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-//
-//            return null;
-//        }
-//    }
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseDatabase.getInstance().getReference().child("Z_ApplicationStatus").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    status = statusAdapter.getStatus();
+                    statusCheck(status);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+    private void statusCheck(String status){
+        if(status.equals("Inactive")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Status");
+            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
 
     @Override
     public void onDestroy() {

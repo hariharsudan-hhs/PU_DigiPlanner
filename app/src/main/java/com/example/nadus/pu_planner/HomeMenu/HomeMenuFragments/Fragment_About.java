@@ -1,14 +1,25 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
+import com.example.nadus.pu_planner.LoginActivity;
 import com.example.nadus.pu_planner.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
@@ -19,7 +30,7 @@ public class Fragment_About extends Fragment {
     Calligrapher calligrapher;
 
     NoInternetDialog noInternetDialog;
-
+    private String status = "";
 
 
     @Nullable
@@ -30,6 +41,7 @@ public class Fragment_About extends Fragment {
         HomeActivity.toolbar.setTitle("About Us");
 
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
+        new MyTask_statusCheck().execute();
 
         return v;
     }
@@ -40,6 +52,45 @@ public class Fragment_About extends Fragment {
 
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(),"Ubuntu_R.ttf",true);
+    }
+
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseDatabase.getInstance().getReference().child("Z_ApplicationStatus").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    status = statusAdapter.getStatus();
+                    statusCheck(status);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+
+    private void statusCheck(String status){
+        if(status.equals("Inactive")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Status");
+            builder.setMessage("Application is "+status+". Please contact admin.");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     @Override

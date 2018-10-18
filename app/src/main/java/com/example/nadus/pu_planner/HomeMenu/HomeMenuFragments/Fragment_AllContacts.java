@@ -1,7 +1,9 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Contacts_Department_1;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Contacts;
@@ -51,6 +54,7 @@ public class Fragment_AllContacts extends Fragment implements RecyclerViewAdapte
     ProgressDialog progressDialog;
 
     NoInternetDialog noInternetDialog;
+    private String status = "";
 
     @Nullable
     @Override
@@ -63,6 +67,7 @@ public class Fragment_AllContacts extends Fragment implements RecyclerViewAdapte
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
+        new MyTask_statusCheck().execute();
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_allcontacts);
@@ -134,6 +139,44 @@ public class Fragment_AllContacts extends Fragment implements RecyclerViewAdapte
             });
 
             return null;
+        }
+    }
+
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseDatabase.getInstance().getReference().child("Z_ApplicationStatus").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    status = statusAdapter.getStatus();
+                    statusCheck(status);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+    private void statusCheck(String status){
+        if(status.equals("Inactive")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Status");
+            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

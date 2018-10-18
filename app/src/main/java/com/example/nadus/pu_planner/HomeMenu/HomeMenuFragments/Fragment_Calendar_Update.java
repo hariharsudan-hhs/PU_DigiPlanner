@@ -22,6 +22,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +57,7 @@ public class Fragment_Calendar_Update extends Fragment {
     ProgressDialog progressDialog;
 
     NoInternetDialog noInternetDialog;
+    private String status = "";
 
     @SuppressLint("ValidFragment")
     public Fragment_Calendar_Update(String name, String time, String description, String date){
@@ -82,6 +84,7 @@ public class Fragment_Calendar_Update extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
 
+        new MyTask_statusCheck().execute();
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
         calendar_event_add_dp = (EditText) v.findViewById(R.id.calendar_event_add_dp);
@@ -242,7 +245,7 @@ public class Fragment_Calendar_Update extends Fragment {
             eventAdapter.setsCalendarname(calendar_add_name.getText().toString());
             eventAdapter.setsCalendardescription(calendar_add_description.getText().toString());
             eventAdapter.setsDatepicker(calendar_event_add_dp.getText().toString());
-            eventAdapter.setsTimepicker(calendar_event_add_tp.getText().toString());
+            eventAdapter.setsTimepicker(sNormal_time);
 
             String temp_date = sDatepicker.replace("/","_");
             databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(temp_date).child(eventAdapter.getsCalendarname()).setValue(eventAdapter);
@@ -284,6 +287,44 @@ public class Fragment_Calendar_Update extends Fragment {
             });
 
             return null;
+        }
+    }
+
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseDatabase.getInstance().getReference().child("Z_ApplicationStatus").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    status = statusAdapter.getStatus();
+                    statusCheck(status);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+    private void statusCheck(String status){
+        if(status.equals("Inactive")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("Status");
+            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

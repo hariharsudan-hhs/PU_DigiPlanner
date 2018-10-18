@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.RegisterAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.LoginActivity;
 import com.example.nadus.pu_planner.R;
@@ -48,6 +49,7 @@ public class Fragment_Profile extends Fragment {
 
     Boolean lol = true;
     private String temp = "";
+    private String status = "";
 
     @Nullable
     @Override
@@ -161,7 +163,69 @@ public class Fragment_Profile extends Fragment {
                 }
             });
 
+            databaseReference2 = databaseReference2.child("Z_ApplicationStatus");
+            databaseReference2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    if(statusAdapter.getStatus().equals("Active")){
+                        app_status.setText(statusAdapter.getStatus());
+                        app_status.setTextColor(getResources().getColor(R.color.green));
+                    } else if(statusAdapter.getStatus().equals("Under Maintenance")){
+                        app_status.setText(statusAdapter.getStatus());
+                        app_status.setTextColor(getResources().getColor(R.color.orange));
+                    } else if(statusAdapter.getStatus().equals("Inactive")){
+                        app_status.setText(statusAdapter.getStatus());
+                        app_status.setTextColor(getResources().getColor(R.color.red));
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
             return null;
+        }
+    }
+
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseDatabase.getInstance().getReference().child("Z_ApplicationStatus").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    StatusAdapter statusAdapter = dataSnapshot.getValue(StatusAdapter.class);
+                    status = statusAdapter.getStatus();
+                    statusCheck(status);
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
+    }
+    private void statusCheck(String status){
+        if(status.equals("Inactive")) {
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
+            builder.setTitle("Status");
+            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getActivity().finish();
+                }
+            });
+            android.app.AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 

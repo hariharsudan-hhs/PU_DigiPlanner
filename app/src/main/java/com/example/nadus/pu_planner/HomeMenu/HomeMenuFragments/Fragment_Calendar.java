@@ -51,7 +51,7 @@ import me.anwarshahriar.calligrapher.Calligrapher;
 public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_Calendar.ItemClickListener{
 
     Calligrapher calligrapher;
-    FloatingActionButton calender_add_fab;
+    FloatingActionButton calendar_add_fab;
     String today_date="", selected_date="", selected_day, today_date_temp = "", selected_date_temp = "", current_user;
     TextView current_date, current_day;
     CalendarView calendarView;
@@ -91,17 +91,17 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
 
-        calender_add_fab = (FloatingActionButton) v.findViewById(R.id.calender_add_fab);
+        calendar_add_fab = (FloatingActionButton) v.findViewById(R.id.calendar_add_fab);
         current_date = (TextView) v.findViewById(R.id.current_date);
         current_day = (TextView) v.findViewById(R.id.current_day);
         calendarView = (CalendarView) v.findViewById(R.id.calendarView);
-        recyclerView = (RecyclerView) v.findViewById(R.id.calender_list);
+        recyclerView = (RecyclerView) v.findViewById(R.id.calendar_list);
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference2 = FirebaseDatabase.getInstance().getReference();
 
-        calender_add_fab.setOnClickListener(new View.OnClickListener() {
+        calendar_add_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getActivity(),"Add event",Toast.LENGTH_SHORT).show();
@@ -117,9 +117,6 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-
-//                progressDialog2.setMessage("Loading...");
-//                progressDialog2.show();
 
                 progressDialog.show();
                 today_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
@@ -190,25 +187,25 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + (position+1), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLongClick(View view, final int position) {
-        Toast.makeText(getActivity(), "You long clicked " + adapter.getItem(position) + " on row number " + (position+1), Toast.LENGTH_SHORT).show();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Warning!");
-        builder.setMessage("Delete this event?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setTitle("Confirmation");
+        builder.setMessage("What do you want to do?");
+        builder.setPositiveButton("Remove Event", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 progressDialog2.show();
                 new MyTask_deleteEvent(position, current_date.getText().toString()).execute();
             }
-        }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Edit Event", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-               dialog.dismiss();
+                Fragment_Calendar_Update fragment_calendar_update = new Fragment_Calendar_Update(name_list.get(position), time_list.get(position), description_list.get(position), selected_date);
+                getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Calendar_Update()).addToBackStack(null).commit();
+                //new MyTask_editEvent(position, current_date.getText().toString()).execute();
             }
         });
         AlertDialog dialog = builder.create();
@@ -265,8 +262,8 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
                     time_list.add(eventAdapter.getsTimepicker());
-                    name_list.add(eventAdapter.getsCalendername());
-                    description_list.add(eventAdapter.getsCalenderdescription());
+                    name_list.add(eventAdapter.getsCalendarname());
+                    description_list.add(eventAdapter.getsCalendardescription());
                     status_list.add("Available");
                     System.out.println("@@@@ event adapter values " + time_list);
                 }
@@ -302,8 +299,8 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
                     time_list.add(eventAdapter.getsTimepicker());
-                    name_list.add(eventAdapter.getsCalendername());
-                    description_list.add(eventAdapter.getsCalenderdescription());
+                    name_list.add(eventAdapter.getsCalendarname());
+                    description_list.add(eventAdapter.getsCalendardescription());
                     status_list.add("Available");
                     System.out.println("@@@@ event adapter values " + time_list);
                 }
@@ -367,6 +364,42 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
             return null;
         }
     }
+
+//    private class MyTask_editEvent extends AsyncTask<String, Integer, String>{
+//
+//        int position;
+//        String clicked_date;
+//        public MyTask_editEvent(int position, String date) {
+//            this.position = position;
+//            this.clicked_date = date;
+//            System.out.println("@@@@@ "+name_list.get(position)+ " "+clicked_date);
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... strings) {
+//
+//            clicked_date = clicked_date.replace("/", "_");
+//            DatabaseReference databaseReference_edit = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(clicked_date).child(name_list.get(position));
+//            System.out.println("^^^^ "+databaseReference_edit);
+//            databaseReference_edit.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                        System.out.println("%%%% editing " + dataSnapshot1.getKey());
+//                        EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
+//                    }
+//                    progressDialog2.dismiss();
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//
+//            return null;
+//        }
+//    }
 
     @Override
     public void onDestroy() {

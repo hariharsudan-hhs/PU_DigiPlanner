@@ -61,12 +61,11 @@ public class LoginActivity extends AppCompatActivity {
                 if(getValues())
                 {
                     progressDialog.show();
-                    Toast.makeText(LoginActivity.this,"Login Successful!",Toast.LENGTH_SHORT).show();
                     validateCredentials();
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this,"Login Failed!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,"Incorrect Credentials!",Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
 
@@ -89,12 +88,13 @@ public class LoginActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     progressDialog.dismiss();
+                    Toast.makeText(LoginActivity.this,"Login Successful!",Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this,HomeActivity.class));
                     finish();
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this,"Incorrect Credentials!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,"Login Failed!",Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
             }

@@ -4,22 +4,22 @@ public class EventAdapter {
     public EventAdapter() {
     }
 
-    String sCalendername, sCalenderdescription, sDatepicker, sTimepicker;
+    String sCalendarname, sCalendardescription, sDatepicker, sTimepicker;
 
-    public String getsCalendername() {
-        return sCalendername;
+    public String getsCalendarname() {
+        return sCalendarname;
     }
 
-    public void setsCalendername(String sCalendername) {
-        this.sCalendername = sCalendername;
+    public void setsCalendarname(String sCalendarname) {
+        this.sCalendarname = sCalendarname;
     }
 
-    public String getsCalenderdescription() {
-        return sCalenderdescription;
+    public String getsCalendardescription() {
+        return sCalendardescription;
     }
 
-    public void setsCalenderdescription(String sCalenderdescription) {
-        this.sCalenderdescription = sCalenderdescription;
+    public void setsCalendardescription(String sCalendardescription) {
+        this.sCalendardescription = sCalendardescription;
     }
 
     public String getsDatepicker() {

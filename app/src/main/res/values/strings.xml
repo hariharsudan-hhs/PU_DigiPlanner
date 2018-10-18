@@ -25,14 +25,14 @@
     <string name="pleasedescribe">Please describe your problem</string>
     <string name="help_send">Send</string>
     <string name="calendar_today">TODAY</string>
-    <string name="calender_date">dd/mm/yyyy</string>
+    <string name="calendar_date">dd/mm/yyyy</string>
     <string name="contacts_search_hint">Search contacts</string>
-    <string name="calender_add_title">Event details</string>
-    <string name="calender_add_name">Title</string>
-    <string name="calender_add_description">Description</string>
-    <string name="calender_add_reminder_title">Reminder</string>
-    <string name="calender_add_date">Date</string>
-    <string name="calender_add_time">Time</string>
+    <string name="calendar_add_title">Event details</string>
+    <string name="calendar_add_name">Title</string>
+    <string name="calendar_add_description">Description</string>
+    <string name="calendar_add_reminder_title">Reminder</string>
+    <string name="calendar_add_date">Date</string>
+    <string name="calendar_add_time">Time</string>
     <string name="addevent">Add Event</string>
     <string name="addcontact">Add contact</string>
     <string name="contact_add_title">Contact details</string>
@@ -54,7 +54,7 @@
     <string name="reminder_heading_3">Alarm Details</string>
     <string name="reminder_alarm">Alarm Status</string>
     <string name="continue_button">Continue</string>
-    <string name="allevents_set_reminder_text">Edit Reminder</string>
+    <string name="allevents_set_reminder_text">Set Reminder</string>
     <string name="settings_pdf_generation">Generate PDF</string>
     <string name="settings_vcf_generation">Generate VCF</string>
     <string name="settings_language">Choose app language</string>
@@ -71,6 +71,7 @@
     <string name="passage_5">This page displays your basic information and the status of the application i.e., <b>Active/Inactive/Under Maintanance.</b></string>
     <string name="heading_6">Settings</string>
     <string name="passage_6">This page contains additional operations like <b>event pdf generation, vcf generation</b> etc. It also has the option of changing language of the application.</string>
+    <string name="settings_excel_generation">Generate Excel</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>

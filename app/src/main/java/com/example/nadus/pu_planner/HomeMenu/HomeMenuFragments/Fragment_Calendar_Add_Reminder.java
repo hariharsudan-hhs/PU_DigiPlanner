@@ -40,7 +40,7 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
     Calligrapher calligrapher;
 
     TextView reminder_set_event_name, reminder_set_event_description, reminder_set_event_date, reminder_set_event_time, reminder_set_button;
-    String sCalendername, sCalenderdescription, sDatepicker, sTimepicker;
+    String sCalendarname, sCalendardescription, sDatepicker, sTimepicker;
     private int mYear, mMonth,mDay, mHour, mMinute;
     private String mAMPM;
     Button add_event;
@@ -89,8 +89,8 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
         calligrapher = new Calligrapher(getActivity());
         calligrapher.setFont(getActivity(), "Ubuntu_R.ttf", true);
 
-        sCalendername = Fragment_Calendar_Add.sCalendername;
-        sCalenderdescription = Fragment_Calendar_Add.sCalenderdescription;
+        sCalendarname = Fragment_Calendar_Add.sCalendarname;
+        sCalendardescription = Fragment_Calendar_Add.sCalendardescription;
         sDatepicker = Fragment_Calendar_Add.sDatepicker;
         sTimepicker = Fragment_Calendar_Add.sTimepicker;
 
@@ -126,9 +126,9 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_INSERT);
                 intent.setType("vnd.android.cursor.item/event");
-                intent.putExtra(CalendarContract.Events.TITLE, sCalendername);
+                intent.putExtra(CalendarContract.Events.TITLE, sCalendarname);
 //                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Pondicherry");
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, sCalenderdescription);
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, sCalendardescription);
 
                 // Setting dates
                 GregorianCalendar calDate = new GregorianCalendar(mYear, (mMonth-1), mDay);
@@ -156,13 +156,13 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
     private void showValues()
     {
         eventAdapter = new EventAdapter();
-        eventAdapter.setsCalendername(Fragment_Calendar_Add.sCalendername);
-        eventAdapter.setsCalenderdescription(Fragment_Calendar_Add.sCalenderdescription);
+        eventAdapter.setsCalendarname(Fragment_Calendar_Add.sCalendarname);
+        eventAdapter.setsCalendardescription(Fragment_Calendar_Add.sCalendardescription);
         eventAdapter.setsDatepicker(Fragment_Calendar_Add.sDatepicker);
         eventAdapter.setsTimepicker(Fragment_Calendar_Add.sNormal_time);
 
-        reminder_set_event_name.setText(Fragment_Calendar_Add.sCalendername);
-        reminder_set_event_description.setText(Fragment_Calendar_Add.sCalenderdescription);
+        reminder_set_event_name.setText(Fragment_Calendar_Add.sCalendarname);
+        reminder_set_event_description.setText(Fragment_Calendar_Add.sCalendardescription);
         reminder_set_event_date.setText(Fragment_Calendar_Add.sDatepicker);
         reminder_set_event_time.setText(Fragment_Calendar_Add.sTimepicker);
 
@@ -185,7 +185,7 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
 
         sDatepicker = sDatepicker.replace("/","_");
 
-        databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(sDatepicker).child(sCalendername).setValue(eventAdapter);
+        databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(sDatepicker).child(sCalendarname).setValue(eventAdapter);
         progressDialog.dismiss();
     }
 

@@ -82,7 +82,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         current_date2 = (TextView) v.findViewById(R.id.current_date2);
         current_day2 = (TextView) v.findViewById(R.id.current_day2);
         calendarView2 = (CalendarView) v.findViewById(R.id.calendarView2);
-        recyclerView2 = (RecyclerView) v.findViewById(R.id.calender_list2);
+        recyclerView2 = (RecyclerView) v.findViewById(R.id.calendar_list2);
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference_allevents = FirebaseDatabase.getInstance().getReference();
@@ -220,8 +220,8 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
                     date_list2.add(eventAdapter.getsDatepicker());
                     time_list2.add(eventAdapter.getsTimepicker());
-                    name_list2.add(eventAdapter.getsCalendername());
-                    description_list2.add(eventAdapter.getsCalenderdescription());
+                    name_list2.add(eventAdapter.getsCalendarname());
+                    description_list2.add(eventAdapter.getsCalendardescription());
                     status_list2.add("Available");
                     System.out.println("@@@@ event adapter values " + time_list2);
                 }
@@ -258,8 +258,8 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
                     EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
                     date_list2.add(eventAdapter.getsDatepicker());
                     time_list2.add(eventAdapter.getsTimepicker());
-                    name_list2.add(eventAdapter.getsCalendername());
-                    description_list2.add(eventAdapter.getsCalenderdescription());
+                    name_list2.add(eventAdapter.getsCalendarname());
+                    description_list2.add(eventAdapter.getsCalendardescription());
                     status_list2.add("Available");
                     System.out.println("@@@@ event adapter values " + time_list2);
                 }

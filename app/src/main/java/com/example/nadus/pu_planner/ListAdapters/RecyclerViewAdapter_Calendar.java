@@ -37,7 +37,7 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.calender_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.calendar_list_item, parent, false);
         return new ViewHolder(view);
     }
 

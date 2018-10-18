@@ -1,12 +1,17 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,21 +25,26 @@ import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
-public class Fragment_Calendar_Add extends Fragment {
+@SuppressLint("ValidFragment")
+public class Fragment_Calendar_Update extends Fragment {
 
     Calligrapher calligrapher;
 
     EditText calendar_event_add_dp, calendar_event_add_tp, calendar_add_name, calendar_add_description;
-    static String sCalendarname, sCalendardescription, sDatepicker, sTimepicker, mAMPM, sNormal_time;
+    static String sCalendarname = "", sCalendardescription = "", sDatepicker = "", sTimepicker = "", mAMPM = "", sNormal_time = "";
     private int mYear, mMonth, mDay, mHour, mMinute;
     Button continue_button;
 
@@ -47,12 +57,24 @@ public class Fragment_Calendar_Add extends Fragment {
 
     NoInternetDialog noInternetDialog;
 
+    @SuppressLint("ValidFragment")
+    public Fragment_Calendar_Update(String name, String time, String description, String date){
+        sCalendarname = name;
+        sTimepicker = time;
+        sCalendardescription = description;
+        sDatepicker = date;
+        System.out.println("----------> "+sCalendarname+" "+sCalendardescription+" "+sDatepicker+" "+sTimepicker);
+    }
+
+    public Fragment_Calendar_Update() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_calendar_add,container,false);
 
-        HomeActivity.toolbar.setTitle("Add an event");
+        HomeActivity.toolbar.setTitle("Edit an event");
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -68,15 +90,19 @@ public class Fragment_Calendar_Add extends Fragment {
         calendar_add_description = (EditText) v.findViewById(R.id.calendar_add_description);
         continue_button = (Button) v.findViewById(R.id.continue_button);
 
+        calendar_add_name.setText(sCalendarname);
+        calendar_add_description.setText(sCalendardescription);
+        calendar_event_add_dp.setText(sDatepicker);
+        calendar_event_add_tp.setText(sTimepicker);
+
         calendar_event_add_dp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get Current Date
+//                // Get Current Date
                 final Calendar c = Calendar.getInstance();
                 mYear = c.get(Calendar.YEAR);
                 mMonth = c.get(Calendar.MONTH);
                 mDay = c.get(Calendar.DAY_OF_MONTH);
-
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                         new DatePickerDialog.OnDateSetListener() {
@@ -139,39 +165,25 @@ public class Fragment_Calendar_Add extends Fragment {
         continue_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getValues())
-                {
-                    updateValueToNext();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Warning!");
+                builder.setMessage("Any reminders already set for this event should be manually changed. Continue?");
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog.show();
+                        new MyTask_deleteEvent().execute();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
-
-//        add_event.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(getValues())
-//                {
-//                    progressDialog.show();
-//                    updateValueinDB();
-//                    Toast.makeText(getActivity(),"Success!",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
     }
 
     private void updateValueToNext()
     {
-        getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Calendar_Add_Reminder()).addToBackStack(null).commit();
-
-//        String current_user = firebaseAuth.getCurrentUser().getEmail();
-//        current_user = current_user.replace(".","_");
-//
-//        sDatepicker = sDatepicker.replace("/","_");
-//        sTimepicker = sTimepicker.replace(":","_");
-//
-//        databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(sDatepicker).child(sCalendarname).setValue(eventAdapter);
-//        clearAll();
-        progressDialog.dismiss();
+        new MyTask_editEvent().execute();
     }
 
     private boolean getValues()
@@ -216,6 +228,63 @@ public class Fragment_Calendar_Add extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         noInternetDialog.onDestroy();
+    }
+
+    private class MyTask_editEvent extends AsyncTask<String,Integer,String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String current_user = firebaseAuth.getCurrentUser().getEmail();
+            current_user = current_user.replace(".","_");
+
+            EventAdapter eventAdapter = new EventAdapter();
+            eventAdapter.setsCalendarname(calendar_add_name.getText().toString());
+            eventAdapter.setsCalendardescription(calendar_add_description.getText().toString());
+            eventAdapter.setsDatepicker(calendar_event_add_dp.getText().toString());
+            eventAdapter.setsTimepicker(calendar_event_add_tp.getText().toString());
+
+            String temp_date = sDatepicker.replace("/","_");
+            databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(temp_date).child(eventAdapter.getsCalendarname()).setValue(eventAdapter);
+            progressDialog.dismiss();
+
+            startActivity(new Intent(getActivity(),HomeActivity.class));
+
+            return null;
+        }
+    }
+
+    private class MyTask_deleteEvent extends AsyncTask<String, Integer, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String current_user = firebaseAuth.getCurrentUser().getEmail();
+            current_user = current_user.replace(".","_");
+
+            String temp_date = sDatepicker.replace("/","_");
+
+            DatabaseReference databaseReference_del = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(temp_date).child(sCalendarname);
+            System.out.println("---------> db path "+databaseReference_del);
+            databaseReference_del.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        System.out.println("%%%% removing " + dataSnapshot1.getKey());
+                        dataSnapshot1.getRef().removeValue();
+                    }
+                    if(getValues()) {
+                        updateValueToNext();
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
     }
 
 }

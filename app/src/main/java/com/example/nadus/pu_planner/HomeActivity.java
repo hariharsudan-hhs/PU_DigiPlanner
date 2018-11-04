@@ -1,9 +1,6 @@
 package com.example.nadus.pu_planner;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -20,12 +17,13 @@ import android.widget.TextView;
 import com.example.nadus.pu_planner.HomeMenu.DrawerAdapter;
 import com.example.nadus.pu_planner.HomeMenu.DrawerItem;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_About;
-import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllContacts;
+import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllContacts_new;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllEvents;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Calendar;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Contacts;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Help;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Profile;
+import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_PuDocs;
 import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Settings;
 import com.example.nadus.pu_planner.HomeMenu.SimpleItem;
 import com.example.nadus.pu_planner.HomeMenu.SpaceItem;
@@ -45,10 +43,11 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
     private static final int POS_ALLEVENTS = 1;
     private static final int POS_MYCONTACTS = 2;
     private static final int POS_ALLCONTACTS = 3;
-    private static final int POS_PROFILE = 4;
-    private static final int POS_SETTINGS = 5;
-    private static final int POS_ABOUT = 7;
-    private static final int POS_HELP = 8;
+    private static final int POS_PUDOCS = 4;
+    private static final int POS_PROFILE = 5;
+    private static final int POS_SETTINGS = 6;
+    private static final int POS_ABOUT = 8;
+    private static final int POS_HELP = 9;
 
     private String[] screenTitles;
     private Drawable[] screenIcons;
@@ -97,6 +96,7 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
                 createItemFor(POS_ALLEVENTS),
                 createItemFor(POS_MYCONTACTS),
                 createItemFor(POS_ALLCONTACTS),
+                createItemFor(POS_PUDOCS),
                 createItemFor(POS_PROFILE),
                 createItemFor(POS_SETTINGS),
                 new SpaceItem(34),
@@ -138,7 +138,11 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         }
         else if(position == POS_ALLCONTACTS)
         {
-            selectedScreen = new Fragment_AllContacts();
+            selectedScreen = new Fragment_AllContacts_new();
+        }
+        else if(position == POS_PUDOCS)
+        {
+            selectedScreen = new Fragment_PuDocs();
         }
         else if(position == POS_PROFILE)
         {

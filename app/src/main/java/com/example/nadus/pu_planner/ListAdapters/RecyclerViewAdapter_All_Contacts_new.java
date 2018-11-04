@@ -5,23 +5,25 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
 import com.example.nadus.pu_planner.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter_All_Contacts_Department_2 extends RecyclerView.Adapter<RecyclerViewAdapter_All_Contacts_Department_2.ViewHolder> {
+public class RecyclerViewAdapter_All_Contacts_new extends RecyclerView.Adapter<RecyclerViewAdapter_All_Contacts_new.ViewHolder> {
 
-    public List<String> mData;
+    private List<ArrayList<String>> mData;
     public LayoutInflater mInflater;
     public ItemClickListener mClickListener;
 
-    TextDrawable drawable;
-
     // data is passed into the constructor
-    public RecyclerViewAdapter_All_Contacts_Department_2(Context context, List<String> data) {
+    public RecyclerViewAdapter_All_Contacts_new(Context context, List<ArrayList<String>> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -29,15 +31,17 @@ public class RecyclerViewAdapter_All_Contacts_Department_2 extends RecyclerView.
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.contact_list_dept_item, parent, false);
+        View view = mInflater.inflate(R.layout.contact_layout, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String name = mData.get(position);
-        holder.myTextView.setText(name);
+        holder.contact_name.setText(mData.get(position).get(2));
+        holder.contact_designation.setText(mData.get(position).get(4));
+        holder.contact_department.setText(mData.get(position).get(3));
+        holder.contact_category.setText(mData.get(position).get(1));
     }
 
     // total number of rows
@@ -49,11 +53,14 @@ public class RecyclerViewAdapter_All_Contacts_Department_2 extends RecyclerView.
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
+        TextView contact_name, contact_designation, contact_department, contact_category;
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.list_dept_textView);
+            contact_name = itemView.findViewById(R.id.contact_name);
+            contact_designation = itemView.findViewById(R.id.contact_designation);
+            contact_department = itemView.findViewById(R.id.contact_department);
+            contact_category = itemView.findViewById(R.id.contact_category);
 
             itemView.setOnClickListener(this);
         }
@@ -65,9 +72,9 @@ public class RecyclerViewAdapter_All_Contacts_Department_2 extends RecyclerView.
     }
 
     // convenience method for getting data at click position
-    public String getItem(int id) {
-        return mData.get(id);
-    }
+//    public String getItem(int id) {
+//        return mData.get(id);
+//    }
 
     // allows clicks events to be caught
     public void setClickListener(ItemClickListener itemClickListener) {

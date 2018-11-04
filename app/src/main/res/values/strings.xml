@@ -9,7 +9,7 @@
     <string name="loginheading">LOGIN</string>
     <string name="loginyouraccount">Welcome back!</string>
     <string name="enteryouremail">Enter your email to login</string>
-    <string name="connectwithus">Connect with us</string>
+    <string name="creative_team">Creative Team</string>
     <string name="aboutme">About me</string>
     <string name="appdetails">App details</string>
     <string name="aboutme_name">Name</string>
@@ -43,7 +43,7 @@
     <string name="contact_add_designation">Designation</string>
     <string name="contact_add_employeeid">Employee ID</string>
     <string name="contact_card_heading">Contact Information</string>
-    <string name="aboutme_empid">Employee ID</string>
+    <string name="aboutme_empid">ID</string>
     <string name="logout">LOG OUT</string>
     <string name="reminder_heading">Event Details</string>
     <string name="reminder_name">Event Name</string>
@@ -72,6 +72,24 @@
     <string name="heading_6">Settings</string>
     <string name="passage_6">This page contains additional operations like event pdf generation, vcf generation etc. It also has the option of changing language of the application.</string>
     <string name="settings_excel_generation">Generate Excel</string>
+    <string name="about_us_text">PU DigiPlanner is a mobile app to cater the needs of stake holders i.e., Pondicherry University to keep track of the academic calendar of the University along with storing their activities with reminders. This app also provides the contact details of Pondicherry University Teaching and Non-Teaching personnel with department/centre/school contact details. More than that the users can store their contacts with ease of calling/emailing.</string>
+    <string name="ct_text1">Initiated by\n\nProf. GURMEET SINGH\nVice-Chancellor\n</string>
+    <string name="ct_text2">\nSupervised by\n\nDr.C.K.Ramaiah\nDean(i/c)\nSchool of Performing Arts</string>
+    <string name="ct_text3">\nProf. K. Srinivas\nDean(i/c)\nCollege Development Council</string>
+    <string name="ct_text4">\nDr. Clement Sagayaradja Lourdes\nProfessor &amp; H.O.D\nDepartment of English</string>
+    <string name="ct_text5">\n\nConceptualized by\n\nDr. V. Prasanna Venkatesan\nProfessor\nDepartment of Banking Technology</string>
+    <string name="ct_text6">\n\nDeveloped by\n\nShri. Hariharsudan Saravanan\nStudent/Alumni</string>
+    <string name="total_events">0 event(s) available</string>
+    <string name="heading_7">PU Docs</string>
+    <string name="passage_7">PU Docs is a place where you can view and download common documents shared by Pondicherry University such as exam timetables, practical dates etc.</string>
+    <string name="termsandconditions">PU DigiPlanner\n\nTerms and Conditions ("Terms")\n\nLast updated: October 28, 2018\nPlease read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the www.pondiuni.edu.in/PuDigiPlanner website (the "Service") operated by PU DigiPlanner ("us", "we", or "our"). Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service. By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service. This Terms and Conditions agreement for PU DigiPlanner is managed by the Terms and Conditions Generator.\n\nAccounts\n\nWhen you create an account with us, you must provide us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service. You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service. You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.\n\nLinks To Other Web Sites\n\nOur Service may contain links to third-party web sites or services that are not owned or controlled by PU DigiPlanner. PU DigiPlanner has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that PU DigiPlanner shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services. We strongly advise you to read the terms and conditions and privacy policies of any third-party web sites or services that you visit.\n\nTermination\n\nWe may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability. We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms. Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service. All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.\n\nGoverning Law\n\nThese Terms shall be governed and construed in accordance with the laws of Puducherry, India, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have between us regarding the Service.\n\nChanges\n\nWe reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.\n\nContact Us\n\nIf you have any questions about these Terms, please contact us.\n\nTerms and Conditions of www.pondiuni.edu.in/PuDigiPlanner\n\n</string>
+    <string name="forgotpassowrd">Forgot password?</string>
+    <string name="forgotpassworddialogtext">To reset your password, enter your email address, click reset and check your mail to follow further instructions.</string>
+    <string name="search_hint">Search by name, designation etc...</string>
+    <string name="app_copyright">PU DigiPlanner 2018 \u00A9</string>
+    <string name="app_copyright_2">\u00A9 2018 Pondicherry University.</string>
+    <string name="app_version">Version 1.0.0</string>
+    <string name="allrightsreserved">All rights reserved.</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>

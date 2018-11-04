@@ -1,14 +1,15 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +17,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.DocsAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
-import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Contacts_Department_1;
-import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Contacts_Department_2;
+import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Contacts;
+import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Pudocs;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,49 +40,42 @@ import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
-public class Fragment_AllContacts_2 extends Fragment implements RecyclerViewAdapter_All_Contacts_Department_2.ItemClickListener{
+public class Fragment_PuDocs extends Fragment implements RecyclerViewAdapter_Pudocs.ItemClickListener {
 
     Calligrapher calligrapher;
     private RecyclerView recyclerView;
-    RecyclerViewAdapter_All_Contacts_Department_2 adapter;
-
-    FloatingActionButton contact_add_fab;
-    FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
-
-    List<String> dept_list2 = new ArrayList<String>();
-
-    ProgressDialog progressDialog;
-
-    static String current_item_clicked_2;
-
+    RecyclerViewAdapter_Pudocs adapter;
     NoInternetDialog noInternetDialog;
     private String status = "";
+    FirebaseAuth firebaseAuth;
+    DatabaseReference databaseReference;
+    ProgressDialog progressDialog;
+    String current_doc = "";
+    DocsAdapter docsAdapter;
+
+    List<String> docs_list = new ArrayList<String>();
+    List<String> url_list = new ArrayList<String>();
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_allcontacts_2,container,false);
+        View v = inflater.inflate(R.layout.fragment_pudocs,container,false);
 
-        HomeActivity.toolbar.setTitle(Fragment_AllContacts.current_item_clicked);
-
+        HomeActivity.toolbar.setTitle("PU Docs");
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView);
 
-        new MyTask_statusCheck().execute();
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
-
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view_allcontacts);
+        new MyTask_statusCheck().execute();
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
 
-        current_item_clicked_2 = "";
-
-        dept_list2.clear();
         new MyTask().execute();
-
         return v;
     }
 
@@ -93,43 +90,44 @@ public class Fragment_AllContacts_2 extends Fragment implements RecyclerViewAdap
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new RecyclerViewAdapter_All_Contacts_Department_2(getActivity(), dept_list2);
+        adapter = new RecyclerViewAdapter_Pudocs(getActivity(), docs_list);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
-
-
 
     }
 
     @Override
     public void onItemClick(View view, int position) {
-        //Toast.makeText(getActivity(), "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
-        current_item_clicked_2 = dept_list2.get(position);
-        getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_AllContacts_3()).addToBackStack(null).commit();
+        current_doc = docs_list.get(position);
+        Toast.makeText(getActivity(),"Clicked "+docs_list.get(position),Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.setType(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url_list.get(position)));
+        startActivity(intent);
     }
 
     private class MyTask extends AsyncTask<String, Integer, String>
     {
-
         @Override
         protected String doInBackground(String... strings) {
 
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
-            String temp = Fragment_AllContacts.current_item_clicked;
-
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("AllContactDiary").child(temp);
-
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("CommonDocuments");
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                     {
-                        System.out.println("@@@@ departments2 are "+dataSnapshot1.getKey());
                         String key = dataSnapshot1.getKey();
-                        dept_list2.add(key);
+                        docs_list.add(key);
+                        docsAdapter = dataSnapshot1.getValue(DocsAdapter.class);
+                        String key2 = docsAdapter.getFileUrl();
+                        url_list.add(key2);
+
                     }
                     recyclerView.setAdapter(adapter);
+                    if(docs_list.isEmpty()){
+                        Toast.makeText(getActivity(),"No documents yet!",Toast.LENGTH_SHORT).show();
+                    }
                     progressDialog.dismiss();
                 }
 
@@ -143,7 +141,7 @@ public class Fragment_AllContacts_2 extends Fragment implements RecyclerViewAdap
         }
     }
 
-    private class MyTask_statusCheck extends AsyncTask<String, Integer, String>{
+    private class MyTask_statusCheck extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... strings) {
@@ -164,13 +162,14 @@ public class Fragment_AllContacts_2 extends Fragment implements RecyclerViewAdap
             return null;
         }
     }
+
     private void statusCheck(String status){
         if(status.equals("Inactive")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

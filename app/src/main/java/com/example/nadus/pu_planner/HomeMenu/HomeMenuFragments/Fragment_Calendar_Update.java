@@ -32,8 +32,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
@@ -45,7 +47,7 @@ public class Fragment_Calendar_Update extends Fragment {
     Calligrapher calligrapher;
 
     EditText calendar_event_add_dp, calendar_event_add_tp, calendar_add_name, calendar_add_description;
-    static String sCalendarname = "", sCalendardescription = "", sDatepicker = "", sTimepicker = "", mAMPM = "", sNormal_time = "";
+    static String sCalendarname = "", sCalendardescription = "", sDatepicker = "", sTimepicker = "", mAMPM = "";
     private int mYear, mMonth, mDay, mHour, mMinute;
     Button continue_button;
 
@@ -60,12 +62,11 @@ public class Fragment_Calendar_Update extends Fragment {
     private String status = "";
 
     @SuppressLint("ValidFragment")
-    public Fragment_Calendar_Update(String name, String time, String description, String date){
-        sCalendarname = name;
-        sTimepicker = time;
-        sCalendardescription = description;
+    public Fragment_Calendar_Update(ArrayList<String> mycalendar_list, String date){
+        sCalendarname = mycalendar_list.get(0);
+        sTimepicker = mycalendar_list.get(3);
+        sCalendardescription = mycalendar_list.get(1);
         sDatepicker = date;
-        System.out.println("----------> "+sCalendarname+" "+sCalendardescription+" "+sDatepicker+" "+sTimepicker);
     }
 
     public Fragment_Calendar_Update() {
@@ -80,6 +81,7 @@ public class Fragment_Calendar_Update extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -92,11 +94,6 @@ public class Fragment_Calendar_Update extends Fragment {
         calendar_add_name = (EditText) v.findViewById(R.id.calendar_add_name);
         calendar_add_description = (EditText) v.findViewById(R.id.calendar_add_description);
         continue_button = (Button) v.findViewById(R.id.continue_button);
-
-        calendar_add_name.setText(sCalendarname);
-        calendar_add_description.setText(sCalendardescription);
-        calendar_event_add_dp.setText(sDatepicker);
-        calendar_event_add_tp.setText(sTimepicker);
 
         calendar_event_add_dp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,10 +142,9 @@ public class Fragment_Calendar_Update extends Fragment {
                                     temp_hourOfDay = hourOfDay-12;
                                     mAMPM = "PM";
                                 }
-                                sNormal_time = (String.format("%02d",temp_hourOfDay) + ":" + String.format("%02d",minute) +" "+ mAMPM);
-                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
+                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute)+ " "+mAMPM);
                             }
-                        }, mHour, mMinute, true);
+                        }, mHour, mMinute, false);
                 timePickerDialog.show();
             }
         });
@@ -170,7 +166,8 @@ public class Fragment_Calendar_Update extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Warning!");
-                builder.setMessage("Any reminders already set for this event should be manually changed. Continue?");
+                builder.setIcon(getResources().getDrawable(R.drawable.ic_timer));
+                builder.setMessage("Please click the clock icon in the events page once again to update your reminder for this event.");
                 builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -182,6 +179,11 @@ public class Fragment_Calendar_Update extends Fragment {
                 dialog.show();
             }
         });
+
+        calendar_add_name.setText(sCalendarname);
+        calendar_add_description.setText(sCalendardescription);
+        calendar_event_add_dp.setText(sDatepicker);
+        calendar_event_add_tp.setText(sTimepicker);
     }
 
     private void updateValueToNext()
@@ -245,7 +247,7 @@ public class Fragment_Calendar_Update extends Fragment {
             eventAdapter.setsCalendarname(calendar_add_name.getText().toString());
             eventAdapter.setsCalendardescription(calendar_add_description.getText().toString());
             eventAdapter.setsDatepicker(calendar_event_add_dp.getText().toString());
-            eventAdapter.setsTimepicker(sNormal_time);
+            eventAdapter.setsTimepicker(calendar_event_add_tp.getText().toString());
 
             String temp_date = sDatepicker.replace("/","_");
             databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(temp_date).child(eventAdapter.getsCalendarname()).setValue(eventAdapter);
@@ -268,12 +270,10 @@ public class Fragment_Calendar_Update extends Fragment {
             String temp_date = sDatepicker.replace("/","_");
 
             DatabaseReference databaseReference_del = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(temp_date).child(sCalendarname);
-            System.out.println("---------> db path "+databaseReference_del);
             databaseReference_del.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        System.out.println("%%%% removing " + dataSnapshot1.getKey());
                         dataSnapshot1.getRef().removeValue();
                     }
                     if(getValues()) {
@@ -315,9 +315,9 @@ public class Fragment_Calendar_Update extends Fragment {
         if(status.equals("Inactive")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

@@ -42,7 +42,7 @@ public class Fragment_Calendar_Add extends Fragment {
     Calligrapher calligrapher;
 
     EditText calendar_event_add_dp, calendar_event_add_tp, calendar_add_name, calendar_add_description;
-    static String sCalendarname, sCalendardescription, sDatepicker, sTimepicker, mAMPM, sNormal_time;
+    static String sCalendarname, sCalendardescription, sDatepicker, sTimepicker, mAMPM;
     private int mYear, mMonth, mDay, mHour, mMinute;
     Button continue_button;
 
@@ -65,6 +65,7 @@ public class Fragment_Calendar_Add extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
@@ -101,6 +102,7 @@ public class Fragment_Calendar_Add extends Fragment {
 
                             }
                         }, mYear, mMonth, mDay);
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
             }
         });
@@ -127,14 +129,12 @@ public class Fragment_Calendar_Add extends Fragment {
                                     temp_hourOfDay = hourOfDay-12;
                                     mAMPM = "PM";
                                 }
-                                sNormal_time = (String.format("%02d",temp_hourOfDay) + ":" + String.format("%02d",minute) +" "+ mAMPM);
-                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute));
+                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute)+ " "+mAMPM);
                             }
-                        }, mHour, mMinute, true);
+                        }, mHour, mMinute, false);
                 timePickerDialog.show();
             }
         });
-
 
 
         return v;
@@ -227,9 +227,9 @@ public class Fragment_Calendar_Add extends Fragment {
         if(status.equals("Inactive")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

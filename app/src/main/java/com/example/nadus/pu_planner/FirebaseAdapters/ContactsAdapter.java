@@ -4,6 +4,18 @@ public class ContactsAdapter {
     public ContactsAdapter() {
     }
 
+    public String sContact_name;
+    public String sEmployee_id;
+    public String sEmail_1;
+    public String sEmail_2;
+    public String sEmail_3;
+    public String sNumber_1;
+    public String sNumber_2;
+    public String sNumber_3;
+    public String sDesignation;
+    public String sCategory;
+    public String sDepartment;
+
     public String getsContact_name() {
         return sContact_name;
     }
@@ -76,6 +88,20 @@ public class ContactsAdapter {
         this.sDesignation = sDesignation;
     }
 
-    public String sContact_name, sEmployee_id, sEmail_1, sEmail_2, sEmail_3, sNumber_1, sNumber_2, sNumber_3, sDesignation;
+    public String getsCategory() {
+        return sCategory;
+    }
+
+    public void setsCategory(String sCategory) {
+        this.sCategory = sCategory;
+    }
+
+    public String getsDepartment() {
+        return sDepartment;
+    }
+
+    public void setsDepartment(String sDepartment) {
+        this.sDepartment = sDepartment;
+    }
 
 }

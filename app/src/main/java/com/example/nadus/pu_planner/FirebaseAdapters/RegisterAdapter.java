@@ -4,7 +4,7 @@ public class RegisterAdapter {
     public RegisterAdapter()
     {}
 
-    public String sFirstname, sLastname, sEmployeeid, sMobile, sEmail, sPassword;
+    public String sFirstname, sLastname, sEmployeeid, sMobile, sEmail;
 
     public String getsFirstname() {
         return sFirstname;
@@ -44,13 +44,5 @@ public class RegisterAdapter {
 
     public void setsEmail(String sEmail) {
         this.sEmail = sEmail;
-    }
-
-    public String getsPassword() {
-        return sPassword;
-    }
-
-    public void setsPassword(String sPassword) {
-        this.sPassword = sPassword;
     }
 }

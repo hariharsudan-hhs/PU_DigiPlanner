@@ -2,15 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="60dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="60dp" />
 
         <TextView
             android:id="@+id/name"
@@ -24,29 +25,29 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:paddingEnd="24dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingStart="24dp"
-        android:text="Email Address" />
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:paddingEnd="24dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingStart="24dp"
+            android:text="Email Address" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="25dp" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="25dp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="40dp" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="40dp" />
 
     </LinearLayout>
 
@@ -56,6 +57,6 @@
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:padding="5dp"
-        android:text="PU DigiPlanner 2018 \u00A9"
+        android:text="@string/app_copyright"
         android:textSize="10sp" />
 </RelativeLayout>

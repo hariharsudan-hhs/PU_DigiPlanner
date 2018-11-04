@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="horizontal"
     android:padding="10dp">
 
@@ -93,22 +94,6 @@
                     android:text="Pending"
                     android:textColor="@color/textgray" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/set_reminder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right|end"
-                        android:padding="10dp"
-                        android:text="@string/allevents_set_reminder_text"
-                        android:textColor="@color/colorAccent" />
-                </LinearLayout>
-
             </LinearLayout>
 
         </LinearLayout>
@@ -121,10 +106,40 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="4dp"
-            android:layout_height="30dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:background="@color/colorAccent"></View>
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="30dp"
+                android:background="@color/colorAccent"></View>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <com.github.zagum.switchicon.SwitchIconView
+                android:id="@+id/switchIconView"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:padding="8dp"
+                android:scaleType="fitXY"
+                app:si_enabled="false"
+                app:si_tint_color="@color/lightgreen"
+                app:srcCompat="@drawable/ic_timer" />
+
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

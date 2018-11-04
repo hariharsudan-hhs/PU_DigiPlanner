@@ -91,6 +91,7 @@ public class Fragment_Contacts_Add extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
 
         add_contact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +121,7 @@ public class Fragment_Contacts_Add extends Fragment {
         current_user = current_user.replace(".","_");
 
         databaseReference.child("UserAccounts").child("Staffs").child(current_user).child("ContactsDiary").child(sEmployee_id).setValue(contactsAdapter);
+        Toast.makeText(getActivity(),"Added successfully!",Toast.LENGTH_SHORT).show();
         clearAll();
     }
 
@@ -239,9 +241,9 @@ public class Fragment_Contacts_Add extends Fragment {
         if(status.equals("Inactive")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

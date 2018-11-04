@@ -6,6 +6,7 @@
         <item>PU Calendar</item>
         <item>My Contacts</item>
         <item>PU Contacts</item>
+        <item>PU Docs</item>
         <item>Profile</item>
         <item>Settings</item>
         <item />
@@ -18,6 +19,7 @@
         <item>@drawable/ic_action_academic_calendar</item>
         <item>@drawable/ic_action_contacts_icon</item>
         <item>@drawable/ic_action_all_contacts</item>
+        <item>@drawable/ic_action_common_icon</item>
         <item>@drawable/ic_action_profile_icon</item>
         <item>@drawable/ic_action_settings_icon</item>
         <item>0</item>

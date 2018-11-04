@@ -5,16 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.nadus.pu_planner.R;
 
 import java.util.List;
 
-public class RecyclerViewAdapter_All_Contacts_Department_1 extends RecyclerView.Adapter<RecyclerViewAdapter_All_Contacts_Department_1.ViewHolder> {
+public class RecyclerViewAdapter_Pudocs extends RecyclerView.Adapter<RecyclerViewAdapter_Pudocs.ViewHolder> {
 
     public List<String> mData;
     public LayoutInflater mInflater;
@@ -23,7 +21,7 @@ public class RecyclerViewAdapter_All_Contacts_Department_1 extends RecyclerView.
     TextDrawable drawable;
 
     // data is passed into the constructor
-    public RecyclerViewAdapter_All_Contacts_Department_1(Context context, List<String> data) {
+    public RecyclerViewAdapter_Pudocs(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -31,7 +29,7 @@ public class RecyclerViewAdapter_All_Contacts_Department_1 extends RecyclerView.
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.contact_list_dept_item, parent, false);
+        View view = mInflater.inflate(R.layout.doc_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -56,7 +54,6 @@ public class RecyclerViewAdapter_All_Contacts_Department_1 extends RecyclerView.
         ViewHolder(View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.list_dept_textView);
-
             itemView.setOnClickListener(this);
         }
 

@@ -36,19 +36,15 @@ import me.anwarshahriar.calligrapher.Calligrapher;
 public class Fragment_Profile extends Fragment {
 
     Calligrapher calligrapher;
-    TextView about_me_name, about_me_empid, about_me_email, about_me_mobile, about_me_password, about_me_language, about_me_logout, app_status;
+    TextView about_me_name, about_me_empid, about_me_email, about_me_mobile, about_me_language, about_me_logout, app_status;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference, databaseReference2;
 
     ProgressDialog progressDialog;
-
-    ImageView password_switch;
-
     NoInternetDialog noInternetDialog;
 
     Boolean lol = true;
-    private String temp = "";
     private String status = "";
 
     @Nullable
@@ -67,19 +63,15 @@ public class Fragment_Profile extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference2 = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
+        databaseReference2.keepSynced(true);
 
         about_me_name = (TextView) v.findViewById(R.id.about_me_name);
         about_me_empid = (TextView) v.findViewById(R.id.about_me_empid);
         about_me_email = (TextView) v.findViewById(R.id.about_me_email);
         about_me_mobile = (TextView) v.findViewById(R.id.about_me_mobile);
-        about_me_password = (TextView) v.findViewById(R.id.about_me_password);
         about_me_logout = (TextView) v.findViewById(R.id.about_me_logout);
         app_status = (TextView) v.findViewById(R.id.app_status);
-
-
-        about_me_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-
-        password_switch = (ImageView) v.findViewById(R.id.password_switch);
 
         new MyTask().execute();
 
@@ -116,22 +108,8 @@ public class Fragment_Profile extends Fragment {
                 dialog.show();
             }
         });
+        new MyTask_statusCheck().execute();
 
-        password_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(lol) {
-                    password_switch.setImageResource(R.drawable.ic_action_hide_password);
-                    about_me_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                    lol = false;
-                }
-                else {
-                    password_switch.setImageResource(R.drawable.ic_action_show_password);
-                    about_me_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                    lol = true;
-                }
-            }
-        });
     }
 
     private class MyTask extends AsyncTask<String, Integer, String>
@@ -152,8 +130,6 @@ public class Fragment_Profile extends Fragment {
                     about_me_empid.setText(registerAdapter.getsEmployeeid());
                     about_me_email.setText(registerAdapter.getsEmail());
                     about_me_mobile.setText(registerAdapter.getsMobile());
-                    about_me_password.setText(registerAdapter.getsPassword());
-
                     progressDialog.dismiss();
                 }
 
@@ -216,9 +192,9 @@ public class Fragment_Profile extends Fragment {
         if(status.equals("Inactive")) {
             android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

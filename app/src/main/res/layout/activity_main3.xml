@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -29,17 +30,15 @@
                 android:scaleType="centerCrop"
                 android:src="@color/colorPrimary" />
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/titletext"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="75dp"
-                android:layout_marginRight="75dp"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:scaleType="fitStart"
-                app:srcCompat="@drawable/dplogowhite" />
+                android:layout_margin="20dp"
+                android:text="@string/app_name"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="28sp" />
 
         </com.github.florent37.arclayout.ArcLayout>
 
@@ -71,36 +70,65 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="83dp"
                     app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="4dp">
+                    app:cardElevation="4dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:focusableInTouchMode="true"
                         android:orientation="vertical"
-                        android:padding="10dp"
-                        android:focusableInTouchMode="true" >
+                        android:padding="10dp">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/loginyouraccount"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/textView"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/enteryouremail"
-                            android:textColor="@color/textgray" />
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:text="@string/loginyouraccount"
+                                    android:textColor="@color/darkblue"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/textView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginRight="10dp"
+                                    android:text="@string/enteryouremail"
+                                    android:textColor="@color/textgray" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="3"
+                                android:gravity="top|right"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:id="@+id/imageView12"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:adjustViewBounds="true"
+                                    android:scaleType="fitCenter"
+                                    app:srcCompat="@mipmap/ic_launcher_pulogo" />
+                            </LinearLayout>
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/login_email"
@@ -126,6 +154,15 @@
                             android:hint="Password"
                             android:inputType="textPassword"
                             android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/forgotpassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="@string/forgotpassowrd"
+                            android:textAlignment="center"
+                            android:textColor="@color/textgray" />
 
 
                     </LinearLayout>

@@ -1,18 +1,26 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +35,7 @@ import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
+import com.github.zagum.switchicon.SwitchIconView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
@@ -45,11 +55,10 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
 
     Calligrapher calligrapher;
 
-    TextView reminder_set_event_name, reminder_set_event_description, reminder_set_event_date, reminder_set_event_time, reminder_set_button;
+    TextView reminder_set_event_name, reminder_set_event_description, reminder_set_event_date, reminder_set_event_time;
     String sCalendarname, sCalendardescription, sDatepicker, sTimepicker;
-    private int mYear, mMonth,mDay, mHour, mMinute;
-    private String mAMPM;
     Button add_event;
+    SwitchIconView switchIconView_reminder;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
@@ -60,6 +69,7 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
 
     EventAdapter eventAdapter;
     private String status = "";
+    private Uri mInsert;
 
     @Nullable
     @Override
@@ -70,6 +80,7 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.keepSynced(true);
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog2 = new ProgressDialog(getActivity());
@@ -84,7 +95,7 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
         reminder_set_event_description = (TextView) v.findViewById(R.id.reminder_set_event_description);
         reminder_set_event_date = (TextView) v.findViewById(R.id.reminder_set_event_date);
         reminder_set_event_time = (TextView) v.findViewById(R.id.reminder_set_event_time);
-        reminder_set_button = (TextView) v.findViewById(R.id.reminder_set_button);
+        switchIconView_reminder = (SwitchIconView) v.findViewById(R.id.switchIconView_reminder);
         add_event = (Button) v.findViewById(R.id.add_event);
 
         return v;
@@ -129,34 +140,117 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
             }
         });
 
-        reminder_set_button.setOnClickListener(new View.OnClickListener() {
+        switchIconView_reminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_INSERT);
-                intent.setType("vnd.android.cursor.item/event");
-                intent.putExtra(CalendarContract.Events.TITLE, sCalendarname);
-//                intent.putExtra(CalendarContract.Events.EVENT_LOCATION, "Pondicherry");
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, sCalendardescription);
+                switchIconView_reminder.switchState(true);
+                if(switchIconView_reminder.isIconEnabled()){
+//                  add event
+                    String temp_date[] = reminder_set_event_date.getText().toString().split("/");
+                    int mDay = Integer.valueOf(temp_date[0]);
+                    int mMonth = Integer.valueOf(temp_date[1]);
+                    int mYear = Integer.valueOf(temp_date[2]);
+                    String temp_time[] = reminder_set_event_time.getText().toString().split(" ");
+                    String temp_time2[] = temp_time[0].split(":");
+                    int mHour = Integer.valueOf(temp_time2[0]);
+                    int mMinute = Integer.valueOf(temp_time2[1]);
+                    GregorianCalendar calDate = new GregorianCalendar(mYear, (mMonth - 1), mDay, mHour, mMinute);
+                    Cursor cursor = null;
+                    String[] projection = new String[]{
+                            CalendarContract.Calendars._ID,
+                            CalendarContract.Calendars.ACCOUNT_NAME,};
 
-                // Setting dates
-                GregorianCalendar calDate = new GregorianCalendar(mYear, (mMonth-1), mDay);
-                intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                        calDate.getTimeInMillis());
-                intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                        calDate.getTimeInMillis());
+                    ContentResolver cr = getActivity().getContentResolver();
+                    cursor = cr.query(Uri.parse("content://com.android.calendar/calendars"), projection, null, null, null);
 
-                // make it a full day event
-                intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+                    int[] calIds = new int[0];
+                    if (cursor.moveToFirst()) {
+                        final String[] calNames = new String[cursor.getCount()];
+                        calIds = new int[cursor.getCount()];
+                        for (int i = 0; i < calNames.length; i++) {
+                            calIds[i] = cursor.getInt(0);
+                            calNames[i] = cursor.getString(1);
+                            cursor.moveToNext();
+                        }
+                    }
 
-//                // make it a recurring Event
-//                intent.putExtra(Events.RRULE, "FREQ=WEEKLY;COUNT=11;WKST=SU;BYDAY=TU,TH");
+                    try {
+                        ContentValues values = new ContentValues();
+                        values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
+                        values.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis());
+                        values.put(CalendarContract.Events.TITLE, reminder_set_event_name.getText().toString().trim());
+                        values.put(CalendarContract.Events.DESCRIPTION, reminder_set_event_description.getText().toString().trim());
+                        values.put(CalendarContract.Events.CALENDAR_ID, calIds[0]);
+                        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getID());
 
-//                // Making it private and shown as busy
-//                intent.putExtra(Events.ACCESS_LEVEL, Events.ACCESS_PRIVATE);
-//                intent.putExtra(Events.AVAILABILITY, Events.AVAILABILITY_BUSY);
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }
+                        mInsert = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+                        long eventID = Long.parseLong(mInsert.getLastPathSegment());
 
-                startActivity(intent);
-                reminder_set_button.setTextColor(getResources().getColor(R.color.green));
+                        int minutes=60;
+                        // add reminder for the event
+                        ContentValues reminders = new ContentValues();
+                        reminders.put("event_id", eventID);
+                        reminders.put("method", "1");
+                        reminders.put("minutes", minutes);
+
+                        String reminderUriString = "content://com.android.calendar/reminders";
+                        getActivity().getApplicationContext().getContentResolver()
+                                .insert(Uri.parse(reminderUriString), reminders);
+
+                        Toast.makeText(getActivity(), "Reminder added!",
+                                Toast.LENGTH_LONG).show();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Exception: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+//                  delete event
+                    try{
+                        Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
+                        Cursor cursors = getActivity().getContentResolver().query(CALENDAR_URI, null, null, null, null);
+                        if (cursors.moveToFirst())
+                        {
+                            while (cursors.moveToNext())
+                            {
+                                String desc = cursors.getString(cursors.getColumnIndex("description"));
+                                String location = cursors.getString(cursors.getColumnIndex("eventLocation"));
+                                String title = cursors.getString(cursors.getColumnIndex("title"));
+                                // event id
+                                String id = cursors.getString(cursors.getColumnIndex("_id"));
+                                if ((desc==null) && (location == null))
+                                {
+                                }
+                                else
+                                {
+                                    if (desc.equals(reminder_set_event_description.getText().toString().trim()) && title.equals(reminder_set_event_name.getText().toString().trim()))
+                                    {
+                                        Uri uri = ContentUris.withAppendedId(CALENDAR_URI, Integer.parseInt(id));
+                                        getActivity().getContentResolver().delete(uri, null, null);
+                                        Toast.makeText(getActivity(), "Reminder removed!",
+                                                Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "Exception: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         });
     }
@@ -167,21 +261,12 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
         eventAdapter.setsCalendarname(Fragment_Calendar_Add.sCalendarname);
         eventAdapter.setsCalendardescription(Fragment_Calendar_Add.sCalendardescription);
         eventAdapter.setsDatepicker(Fragment_Calendar_Add.sDatepicker);
-        eventAdapter.setsTimepicker(Fragment_Calendar_Add.sNormal_time);
+        eventAdapter.setsTimepicker(Fragment_Calendar_Add.sTimepicker);
 
         reminder_set_event_name.setText(Fragment_Calendar_Add.sCalendarname);
         reminder_set_event_description.setText(Fragment_Calendar_Add.sCalendardescription);
         reminder_set_event_date.setText(Fragment_Calendar_Add.sDatepicker);
         reminder_set_event_time.setText(Fragment_Calendar_Add.sTimepicker);
-
-        String[] time = sTimepicker.split ( ":" );
-        mHour = Integer.parseInt ( time[0].trim() );
-        mMinute = Integer.parseInt ( time[1].trim() );
-
-        String[] date = sDatepicker.split("/");
-        mDay = Integer.valueOf(date[0].trim());
-        mMonth = Integer.valueOf(date[1].trim());
-        mYear = Integer.valueOf(date[2].trim());
 
         progressDialog2.dismiss();
     }
@@ -222,9 +307,9 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
         if(status.equals("Inactive")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

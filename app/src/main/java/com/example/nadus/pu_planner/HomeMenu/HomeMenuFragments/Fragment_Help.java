@@ -3,6 +3,8 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nadus.pu_planner.AppInfoActivity;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
@@ -30,7 +33,7 @@ public class Fragment_Help extends Fragment {
     Calligrapher calligrapher;
 
     TextView help_faq, help_contactus, help_policy, help_appinfo, help_howtouse;
-
+    String mail = "pudigiplanner@gmail.com";
     NoInternetDialog noInternetDialog;
     private String status = "";
 
@@ -61,30 +64,38 @@ public class Fragment_Help extends Fragment {
         help_contactus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Contact us",Toast.LENGTH_SHORT).show();
-                getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Help_2()).addToBackStack(null).commit();
-
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",mail, null));
+                getActivity().startActivity(intent);
             }
         });
 
         help_policy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Policy",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Terms and Conditions");
+                builder.setMessage(getString(R.string.termsandconditions));
+                builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
         help_appinfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"App Info",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), AppInfoActivity.class));
             }
         });
 
         help_howtouse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"How to use the app",Toast.LENGTH_SHORT).show();
                 getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Help_Howtouse()).addToBackStack(null).commit();
             }
         });
@@ -125,9 +136,9 @@ public class Fragment_Help extends Fragment {
         if(status.equals("Inactive")) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle("Status");
-            builder.setMessage("Application is "+status+". Please try after some time. If application inactive for more than 1 hour please contact Admin.");
+            builder.setMessage("We are sorry for the inconvenience caused. Application is "+status+". Please try again after some time.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("Close App", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     getActivity().finish();

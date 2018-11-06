@@ -16,6 +16,20 @@ public class ContactsAdapter {
     public String sCategory;
     public String sDepartment;
 
+    public ContactsAdapter(String sContact_name, String sEmployee_id, String sEmail_1, String sEmail_2, String sEmail_3, String sNumber_1, String sNumber_2, String sNumber_3, String sDesignation, String sCategory, String sDepartment) {
+        this.sContact_name = sContact_name;
+        this.sEmployee_id = sEmployee_id;
+        this.sEmail_1 = sEmail_1;
+        this.sEmail_2 = sEmail_2;
+        this.sEmail_3 = sEmail_3;
+        this.sNumber_1 = sNumber_1;
+        this.sNumber_2 = sNumber_2;
+        this.sNumber_3 = sNumber_3;
+        this.sDesignation = sDesignation;
+        this.sCategory = sCategory;
+        this.sDepartment = sDepartment;
+    }
+
     public String getsContact_name() {
         return sContact_name;
     }
@@ -102,6 +116,30 @@ public class ContactsAdapter {
 
     public void setsDepartment(String sDepartment) {
         this.sDepartment = sDepartment;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer retBuf = new StringBuffer();
+        retBuf.append("Contact Info : Name = ");
+        retBuf.append(this.getsContact_name());
+        retBuf.append(" , ID = ");
+        retBuf.append(this.getsEmployee_id());
+        retBuf.append(" , Designation = ");
+        retBuf.append(this.getsDesignation());
+        retBuf.append(" , Email 1 = ");
+        retBuf.append(this.getsEmail_1());
+        retBuf.append(" , Email 2 = ");
+        retBuf.append(this.getsEmail_2());
+        retBuf.append(" , Email 3 = ");
+        retBuf.append(this.getsEmail_3());
+        retBuf.append(" , Number 1 = ");
+        retBuf.append(this.getsNumber_1());
+        retBuf.append(" , Number 2 = ");
+        retBuf.append(this.getsNumber_2());
+        retBuf.append(" , Number 3 = ");
+        retBuf.append(this.getsNumber_3());
+        return retBuf.toString();
     }
 
 }

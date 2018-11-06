@@ -267,20 +267,23 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
                     {
-                        ContactsAdapter contactsAdapter = dataSnapshot1.getValue(ContactsAdapter.class);
-                        detail_list = new ArrayList<String>();
-                        detail_list.add(0,dataSnapshot1.getKey());
-                        detail_list.add(1,contactsAdapter.getsCategory());
-                        detail_list.add(2,contactsAdapter.getsContact_name());
-                        detail_list.add(3,contactsAdapter.getsDepartment());
-                        detail_list.add(4,contactsAdapter.getsDesignation());
-                        detail_list.add(5,contactsAdapter.getsEmail_1());
-                        detail_list.add(6,contactsAdapter.getsEmail_2());
-                        detail_list.add(7,contactsAdapter.getsEmail_3());
-                        detail_list.add(8,contactsAdapter.getsNumber_1());
-                        detail_list.add(9,contactsAdapter.getsNumber_2());
-                        detail_list.add(10,contactsAdapter.getsNumber_3());
-                        contact_list.add(detail_list);
+                        String tempMainID[] = dataSnapshot1.getKey().split("__");
+                        if(HomeActivity.mainID.equals(tempMainID[0]) || tempMainID[0].equals("Both")){
+                            ContactsAdapter contactsAdapter = dataSnapshot1.getValue(ContactsAdapter.class);
+                            detail_list = new ArrayList<String>();
+                            detail_list.add(0,contactsAdapter.getsEmployee_id());
+                            detail_list.add(1,contactsAdapter.getsCategory());
+                            detail_list.add(2,contactsAdapter.getsContact_name());
+                            detail_list.add(3,contactsAdapter.getsDepartment());
+                            detail_list.add(4,contactsAdapter.getsDesignation());
+                            detail_list.add(5,contactsAdapter.getsEmail_1());
+                            detail_list.add(6,contactsAdapter.getsEmail_2());
+                            detail_list.add(7,contactsAdapter.getsEmail_3());
+                            detail_list.add(8,contactsAdapter.getsNumber_1());
+                            detail_list.add(9,contactsAdapter.getsNumber_2());
+                            detail_list.add(10,contactsAdapter.getsNumber_3());
+                            contact_list.add(detail_list);
+                        }
                     }
                     recyclerView.setAdapter(adapter);
                     if(contact_list.isEmpty()){

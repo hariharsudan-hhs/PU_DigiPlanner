@@ -3,7 +3,6 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,13 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Calendar;
-import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Calendar;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -110,18 +107,13 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
 
                 allcalendar_list2.clear();
 
-                //Toast.makeText(getActivity(),"Selected Date : "+String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year,Toast.LENGTH_SHORT).show();
                 selected_date2 = String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year;
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                System.out.println("@@@@ day is "+days[dayOfWeek]);
-
                 selected_day2 = days[dayOfWeek];
-
-                System.out.println("@@@@ today date "+today_date2+" selected date "+selected_date2);
 
                 if(today_date2.equals(selected_date2))
                 {
@@ -162,11 +154,8 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         recyclerView2.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView2.setLayoutManager(mLayoutManager);
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
-//        adapter2 = new RecyclerViewAdapter_All_Calendar(getActivity(), time_list2, name_list2, description_list2, status_list2, date_list2);
         adapter2 = new RecyclerViewAdapter_All_Calendar(getActivity(), allcalendar_list2);
         adapter2.setClickListener(this);
-        //recyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -194,15 +183,18 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
-                    allcalendarlistdetail = new ArrayList<String>();
-                    allcalendarlistdetail.add(0,eventAdapter.getsCalendarname());
-                    allcalendarlistdetail.add(1,eventAdapter.getsCalendardescription());
-                    allcalendarlistdetail.add(2,eventAdapter.getsDatepicker());
-                    allcalendarlistdetail.add(3,eventAdapter.getsTimepicker());
-                    allcalendarlistdetail.add(4,"Available");
-                    allcalendarlistdetail.add(5,checkReminder(allcalendarlistdetail.get(0), allcalendarlistdetail.get(1)));
-                    allcalendar_list2.add(allcalendarlistdetail);
+                    String tempMainID[] = dataSnapshot1.getKey().split("__");
+                    if(HomeActivity.mainID.equals(tempMainID[0]) || tempMainID[0].equals("Both")){
+                        EventAdapter eventAdapter = dataSnapshot1.getValue(EventAdapter.class);
+                        allcalendarlistdetail = new ArrayList<String>();
+                        allcalendarlistdetail.add(0,eventAdapter.getsCalendarname());
+                        allcalendarlistdetail.add(1,eventAdapter.getsCalendardescription());
+                        allcalendarlistdetail.add(2,eventAdapter.getsDatepicker());
+                        allcalendarlistdetail.add(3,eventAdapter.getsTimepicker());
+                        allcalendarlistdetail.add(4,"Available");
+                        allcalendarlistdetail.add(5,checkReminder(allcalendarlistdetail.get(0), allcalendarlistdetail.get(1)));
+                        allcalendar_list2.add(allcalendarlistdetail);
+                    }
                 }
                 if(allcalendar_list2.isEmpty())
                 {

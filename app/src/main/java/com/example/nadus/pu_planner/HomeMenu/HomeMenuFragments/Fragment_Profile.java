@@ -125,8 +125,9 @@ public class Fragment_Profile extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                    String temp[] = firebaseAuth.getCurrentUser().getDisplayName().split("__");
                     RegisterAdapter registerAdapter = dataSnapshot.getValue(RegisterAdapter.class);
-                    about_me_name.setText(firebaseAuth.getCurrentUser().getDisplayName());
+                    about_me_name.setText(temp[1]);
                     about_me_empid.setText(registerAdapter.getsEmployeeid());
                     about_me_email.setText(registerAdapter.getsEmail());
                     about_me_mobile.setText(registerAdapter.getsMobile());

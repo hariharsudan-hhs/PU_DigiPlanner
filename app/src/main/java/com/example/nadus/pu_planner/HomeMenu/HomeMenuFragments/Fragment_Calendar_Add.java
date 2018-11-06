@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
@@ -110,11 +108,6 @@ public class Fragment_Calendar_Add extends Fragment {
         calendar_event_add_tp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get Current Time
-                final Calendar c = Calendar.getInstance();
-                mHour = c.get(Calendar.HOUR_OF_DAY);
-                mMinute = c.get(Calendar.MINUTE);
-
                 // Launch Time Picker Dialog
                 TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
                         new TimePickerDialog.OnTimeSetListener() {
@@ -123,13 +116,28 @@ public class Fragment_Calendar_Add extends Fragment {
                             public void onTimeSet(TimePicker view, int hourOfDay,
                                                   int minute) {
 
-                                if(hourOfDay < 12) {
-                                    mAMPM = "AM";
-                                } else {
-                                    temp_hourOfDay = hourOfDay-12;
-                                    mAMPM = "PM";
+                                Calendar datetime = Calendar.getInstance();
+                                Calendar c = Calendar.getInstance();
+                                datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                datetime.set(Calendar.MINUTE, minute);
+                                mHour = c.get(Calendar.HOUR_OF_DAY);
+                                mMinute = c.get(Calendar.MINUTE);
+                                if(datetime.getTimeInMillis() > c.getTimeInMillis()){
+                    //            it's after current
+                                    if(hourOfDay < 12) {
+                                        mAMPM = "AM";
+                                    } else {
+                                        temp_hourOfDay = hourOfDay-12;
+                                        mAMPM = "PM";
+                                    }
+                                    calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute)+ " "+mAMPM);
+                                    calendar_event_add_tp.setTextColor(getResources().getColor(R.color.black));
+                                }else{
+                    //            it's before current'
+                                    Toast.makeText(getActivity(),"Please give a valid event time",Toast.LENGTH_SHORT).show();
+                                    calendar_event_add_tp.setText("Invalid time");
+                                    calendar_event_add_tp.setTextColor(getResources().getColor(R.color.red));
                                 }
-                                calendar_event_add_tp.setText(String.format("%02d",hourOfDay) + ":" + String.format("%02d",minute)+ " "+mAMPM);
                             }
                         }, mHour, mMinute, false);
                 timePickerDialog.show();

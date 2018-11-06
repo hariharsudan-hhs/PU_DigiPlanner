@@ -102,7 +102,6 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         calendar_add_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"Add event",Toast.LENGTH_SHORT).show();
                 getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Calendar_Add()).addToBackStack(null).commit();
             }
         });
@@ -121,24 +120,18 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
                 mycalendar_list.clear();
 
-                //Toast.makeText(getActivity(),"Selected Date : "+String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year,Toast.LENGTH_SHORT).show();
                 selected_date = String.format("%02d", dayOfMonth)+"/"+String.format("%02d", month+1)+"/"+year;
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, dayOfMonth);
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                System.out.println("@@@@ day is "+days[dayOfWeek]);
-
                 selected_day = days[dayOfWeek];
-
-                System.out.println("@@@@ today date "+today_date+" selected date "+selected_date);
 
                 if(today_date.equals(selected_date))
                 {
                     current_day.setText("TODAY");
                     current_date.setText(selected_date);
-                    //today_date_temp = today_date.replace("/","_");
                     date_temp = today_date.replace("/","_");
                     date_func(date_temp);
                 }
@@ -146,7 +139,6 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
                 {
                     current_day.setText(selected_day);
                     current_date.setText(selected_date);
-                    //selected_date_temp = selected_date.replace("/","_");
                     date_temp = selected_date.replace("/","_");
                     date_func(date_temp);
                 }
@@ -175,10 +167,8 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        adapter = new RecyclerViewAdapter_Calendar(getActivity(), time_list, name_list, description_list, status_list);
         adapter = new RecyclerViewAdapter_Calendar(getActivity(), mycalendar_list);
         adapter.setClickListener(this);
-        //recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -340,7 +330,6 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
             clicked_date = clicked_date.replace("/", "_");
             DatabaseReference databaseReference_del = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary").child(clicked_date).child(mycalendar_list.get(position).get(0));
-            System.out.println("^^^^ "+databaseReference_del);
             databaseReference_del.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

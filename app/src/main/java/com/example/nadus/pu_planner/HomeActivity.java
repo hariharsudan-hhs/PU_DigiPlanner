@@ -58,13 +58,12 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
     Calligrapher calligrapher;
 
-    TextView name,email;
+    TextView name,email,id;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
 
-    private static final String BACK_STACK_ROOT_TAG = "fragment_calendar";
-
+    public static String mainID = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,10 +112,14 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
 
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
+        id = (TextView) findViewById(R.id.id);
 
-        name.setText(firebaseAuth.getCurrentUser().getDisplayName());
+        String tempMainID[] = firebaseAuth.getCurrentUser().getDisplayName().split("__");
+        name.setText(tempMainID[1]);
         email.setText(firebaseAuth.getCurrentUser().getEmail());
+        id.setText("Registered as : "+ tempMainID[0]);
 
+        mainID = tempMainID[0];
     }
 
     @Override

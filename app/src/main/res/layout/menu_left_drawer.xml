@@ -11,7 +11,7 @@
 
         <Space
             android:layout_width="wrap_content"
-            android:layout_height="60dp" />
+            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/name"
@@ -34,7 +34,21 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:paddingStart="24dp"
-            android:text="Email Address" />
+            android:text="Email Address"
+            android:textColor="@color/textgray" />
+
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:paddingEnd="24dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingStart="24dp"
+            android:text="ID"
+            android:textColor="@color/textgray"
+            android:textSize="10sp" />
 
         <Space
             android:layout_width="wrap_content"

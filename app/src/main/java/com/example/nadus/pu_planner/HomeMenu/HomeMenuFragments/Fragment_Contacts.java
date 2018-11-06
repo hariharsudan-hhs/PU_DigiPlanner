@@ -1,19 +1,17 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +27,6 @@ import android.widget.Toast;
 import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
-import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_All_Contacts_new;
 import com.example.nadus.pu_planner.ListAdapters.RecyclerViewAdapter_Contacts;
 import com.example.nadus.pu_planner.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +44,7 @@ import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
-public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_Contacts.ItemClickListener{
+public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_Contacts.ItemClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     Calligrapher calligrapher;
     private RecyclerView recyclerView;
@@ -64,12 +61,9 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
 
     MaterialSearchBar searchBar2;
 
-    ProgressDialog progressDialog;
-
-    boolean refreshFlag = false;
-
     NoInternetDialog noInternetDialog;
     private String status = "";
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Nullable
     @Override
@@ -77,9 +71,6 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         View v = inflater.inflate(R.layout.fragment_contacts,container,false);
 
         HomeActivity.toolbar.setTitle("My Contacts");
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
 
         new MyTask_statusCheck().execute();
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
@@ -95,11 +86,17 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         contact_add_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Contacts_Add()).commit();
+                getFragmentManager().beginTransaction().replace(R.id.container,new Fragment_Contacts_Add()).addToBackStack(null).commit();
             }
         });
 
-        new MyTask().execute();
+        // SwipeRefreshLayout
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
 
         return v;
     }
@@ -118,8 +115,9 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter2 = new RecyclerViewAdapter_Contacts(getActivity(), mycontact_list);
         adapter2.setClickListener(this);
-        recyclerView.setAdapter(adapter2);
-        adapter2.notifyDataSetChanged();
+
+        mSwipeRefreshLayout.setRefreshing(true);
+        new MyTask().execute();
 
         searchBar2.addTextChangeListener(new TextWatcher() {
             @Override
@@ -272,6 +270,13 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
         dialog.show();
     }
 
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.container,new Fragment_Contacts()).commit();
+    }
+
     private class MyTask extends AsyncTask<String, Integer, String>
     {
 
@@ -280,7 +285,6 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
             String current_user = firebaseAuth.getCurrentUser().getEmail();
             current_user = current_user.replace(".","_");
-
             databaseReference = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("ContactsDiary");
 
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -291,7 +295,7 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
                     {
                         ContactsAdapter contactsAdapter = dataSnapshot1.getValue(ContactsAdapter.class);
                         mydetail_list = new ArrayList<String>();
-                        mydetail_list.add(0,dataSnapshot1.getKey());
+                        mydetail_list.add(0,contactsAdapter.getsEmployee_id());
                         mydetail_list.add(1,contactsAdapter.getsCategory());
                         mydetail_list.add(2,contactsAdapter.getsContact_name());
                         mydetail_list.add(3,contactsAdapter.getsDepartment());
@@ -304,13 +308,12 @@ public class Fragment_Contacts extends Fragment implements RecyclerViewAdapter_C
                         mydetail_list.add(10,contactsAdapter.getsNumber_3());
                         mycontact_list.add(mydetail_list);
                     }
-                    Toast.makeText(getActivity(),"Now1",Toast.LENGTH_SHORT).show();
+                    mSwipeRefreshLayout.setRefreshing(false);
                     recyclerView.setAdapter(adapter2);
                     adapter2.notifyDataSetChanged();
                     if(mycontact_list.isEmpty()){
                         Toast.makeText(getActivity(),"No contacts yet!",Toast.LENGTH_SHORT).show();
                     }
-                    progressDialog.dismiss();
                 }
 
                 @Override

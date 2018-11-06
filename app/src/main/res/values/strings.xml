@@ -90,6 +90,8 @@
     <string name="app_copyright_2">\u00A9 2018 Pondicherry University.</string>
     <string name="app_version">Version 1.0.0</string>
     <string name="allrightsreserved">All rights reserved.</string>
+    <string name="create_pdf">Create PDF</string>
+    <string name="pdf_event_info">Note : Filter conditions are not mandatory.</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>

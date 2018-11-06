@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import am.appwise.components.ni.NoInternetDialog;
+import lib.kingja.switchbutton.SwitchMultiButton;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -45,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     private String status = "";
     TextView titletext;
+    String mainID = "Staff";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,15 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
+
+        SwitchMultiButton mSwitchMultiButton = (SwitchMultiButton) findViewById(R.id.switchButton);
+        mSwitchMultiButton.setText("Staff", "Student").setOnSwitchListener(new SwitchMultiButton.OnSwitchListener() {
+            @Override
+            public void onSwitch(int position, String tabText) {
+                //Toast.makeText(RegisterActivity.this, tabText, Toast.LENGTH_SHORT).show();
+                mainID = tabText;
+            }
+        });
     }
 
     private void createAccount()
@@ -101,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onSuccess(AuthResult authResult) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(sFirstname+" "+sLastname).build();
+                UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder().setDisplayName(mainID+"__"+sFirstname+" "+sLastname).build();
                 user.updateProfile(userProfileChangeRequest);
                 startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
                 finish();

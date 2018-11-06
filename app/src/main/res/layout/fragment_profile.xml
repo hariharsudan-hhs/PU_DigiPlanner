@@ -61,7 +61,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_name"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/textgray" />
 
                     <TextView
                         android:id="@+id/about_me_name"
@@ -91,7 +91,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_empid"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/textgray" />
 
                     <TextView
                         android:id="@+id/about_me_empid"
@@ -121,7 +121,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_email"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/textgray" />
 
                     <TextView
                         android:id="@+id/about_me_email"
@@ -151,7 +151,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_mobile"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/textgray" />
 
                     <TextView
                         android:id="@+id/about_me_mobile"
@@ -197,7 +197,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_language"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/textgray" />
 
                     <TextView
                         android:id="@+id/about_me_language"
@@ -228,7 +228,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/aboutme_status"
-                        android:textColor="@color/darkblue" />
+                        android:textColor="@color/textgray" />
 
                     <TextView
                         android:id="@+id/app_status"

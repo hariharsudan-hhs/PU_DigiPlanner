@@ -3,7 +3,6 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,7 +45,6 @@ public class Fragment_Contacts_Add extends Fragment {
 
     NoInternetDialog noInternetDialog;
 
-    String local_employeeid;
     private String status = "";
 
     @Nullable
@@ -75,10 +73,6 @@ public class Fragment_Contacts_Add extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,designation);
         contact_add_designation.setAdapter(adapter);
 
-        SharedPreferences pref = getActivity().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        local_employeeid = pref.getString("emp_id",null);
-
-        System.out.println("@@@@ emp id "+local_employeeid);
         return v;
     }
 

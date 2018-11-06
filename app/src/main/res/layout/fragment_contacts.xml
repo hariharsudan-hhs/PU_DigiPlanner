@@ -41,7 +41,8 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/searchbar_layout"
@@ -54,5 +55,5 @@
 
         </android.support.v7.widget.RecyclerView>
 
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

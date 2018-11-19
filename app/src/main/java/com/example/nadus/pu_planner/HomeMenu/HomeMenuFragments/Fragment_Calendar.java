@@ -1,22 +1,27 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +66,8 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     List<ArrayList<String>> mycalendar_list = new ArrayList<ArrayList<String>>();
     ArrayList<String> mycalendarlistdetail;
+
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 222;
 
     ProgressDialog progressDialog, progressDialog2;
 
@@ -152,6 +159,8 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         date_temp = today_date.replace("/","_");
         date_func(date_temp);
 
+        checkPermission();
+
         return v;
     }
 
@@ -211,8 +220,64 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
 
     }
 
+    public void checkPermission() {
+
+        int hasCalendarPermission1 = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR);
+        int hasCalendarPermission2 = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR);
+        if (hasCalendarPermission1 != PackageManager.PERMISSION_GRANTED && hasCalendarPermission2 != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
+                    showMessageOKCancel("You need to allow access to Calendar",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        requestPermissions(new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR},
+                                                REQUEST_CODE_ASK_PERMISSIONS);
+                                    }
+                                }
+                            });
+                    return;
+                }
+
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CODE_ASK_PERMISSIONS);
+            }
+            return;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+
+                } else {
+                    // Permission Denied
+                    Toast.makeText(getActivity(), "Calendar Permission Denied!", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setCancelable(false)
+                .create()
+                .show();
+    }
+
     private void deleteReminder(String name, String description) {
         try{
+            checkPermission();
             Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
             Cursor cursors = getActivity().getContentResolver().query(CALENDAR_URI, null, null, null, null);
             if (cursors.moveToFirst())
@@ -220,16 +285,15 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
                 while (cursors.moveToNext())
                 {
                     String desc = cursors.getString(cursors.getColumnIndex("description"));
-                    String location = cursors.getString(cursors.getColumnIndex("eventLocation"));
                     String title = cursors.getString(cursors.getColumnIndex("title"));
                     // event id
                     String id = cursors.getString(cursors.getColumnIndex("_id"));
-                    if ((desc==null) && (location == null))
+                    if ((desc==null) && (title == null))
                     {
                     }
                     else
                     {
-                        if (desc.equals(description) && title.equals(title))
+                        if (desc.equals(description) && title.equals(name))
                         {
                             Uri uri = ContentUris.withAppendedId(CALENDAR_URI, Integer.parseInt(id));
                             getActivity().getContentResolver().delete(uri, null, null);
@@ -288,6 +352,7 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
     private String checkReminder(String name, String description) {
         String flag = "off";
         try{
+            checkPermission();
             Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
             Cursor cursors = getActivity().getContentResolver().query(CALENDAR_URI, null, null, null, null);
             if (cursors.moveToFirst())
@@ -395,5 +460,4 @@ public class Fragment_Calendar extends Fragment implements RecyclerViewAdapter_C
         super.onDestroy();
         noInternetDialog.onDestroy();
     }
-
 }

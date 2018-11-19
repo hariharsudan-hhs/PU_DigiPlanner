@@ -22,7 +22,6 @@ allprojects {
         maven { url 'https://jitpack.io' }
         maven { url 'http://dl.bintray.com/amulyakhare/maven'}
         maven { url "https://maven.google.com" }
-        maven { url 'https://mvnrepository.com/artifact/org.apache.poi/poi'}
     }
 }
 

@@ -32,7 +32,7 @@ public class Fragment_Help extends Fragment {
 
     Calligrapher calligrapher;
 
-    TextView help_faq, help_contactus, help_policy, help_appinfo, help_howtouse;
+    TextView help_contactus, help_policy, help_appinfo, help_howtouse;
     String mail = "pudigiplanner@gmail.com";
     NoInternetDialog noInternetDialog;
     private String status = "";
@@ -48,18 +48,10 @@ public class Fragment_Help extends Fragment {
 
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
 
-        help_faq = (TextView) v.findViewById(R.id.help_faq);
         help_contactus = (TextView) v.findViewById(R.id.help_contactus);
         help_policy = (TextView) v.findViewById(R.id.help_policy);
         help_appinfo = (TextView) v.findViewById(R.id.help_appinfo);
         help_howtouse = (TextView) v.findViewById(R.id.help_howtouse);
-
-        help_faq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(),"FAQ",Toast.LENGTH_SHORT).show();
-            }
-        });
 
         help_contactus.setOnClickListener(new View.OnClickListener() {
             @Override

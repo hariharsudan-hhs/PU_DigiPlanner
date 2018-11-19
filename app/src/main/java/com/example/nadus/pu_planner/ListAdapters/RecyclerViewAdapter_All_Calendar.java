@@ -1,23 +1,19 @@
 package com.example.nadus.pu_planner.ListAdapters;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +21,7 @@ import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_AllEvent
 import com.example.nadus.pu_planner.R;
 import com.github.zagum.switchicon.SwitchIconView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -39,6 +31,7 @@ public class RecyclerViewAdapter_All_Calendar extends RecyclerView.Adapter<Recyc
     public List<ArrayList<String>> mData2;
     public LayoutInflater mInflater;
     public ItemClickListener mClickListener;
+    Fragment_AllEvents fragment_allEvents;
 
     Context context;
     private Uri mInsert;
@@ -79,6 +72,7 @@ public class RecyclerViewAdapter_All_Calendar extends RecyclerView.Adapter<Recyc
         holder.switchIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fragment_allEvents.checkPermission();
                 holder.switchIconView.switchState(true);
                 if(holder.switchIconView.isIconEnabled()){
 //                  add event

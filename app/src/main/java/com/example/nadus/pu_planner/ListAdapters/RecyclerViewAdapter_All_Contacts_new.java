@@ -5,12 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
 import com.example.nadus.pu_planner.R;
 
 import java.util.ArrayList;

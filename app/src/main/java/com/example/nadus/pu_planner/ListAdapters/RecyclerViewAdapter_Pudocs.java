@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
 import com.example.nadus.pu_planner.R;
 
 import java.util.List;
@@ -17,8 +16,6 @@ public class RecyclerViewAdapter_Pudocs extends RecyclerView.Adapter<RecyclerVie
     public List<String> mData;
     public LayoutInflater mInflater;
     public ItemClickListener mClickListener;
-
-    TextDrawable drawable;
 
     // data is passed into the constructor
     public RecyclerViewAdapter_Pudocs(Context context, List<String> data) {

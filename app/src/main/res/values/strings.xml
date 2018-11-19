@@ -27,6 +27,7 @@
     <string name="calendar_today">TODAY</string>
     <string name="calendar_date">dd/mm/yyyy</string>
     <string name="contacts_search_hint">Search contacts</string>
+    <string name="docs_search_hint">Search documents</string>
     <string name="calendar_add_title">Event details</string>
     <string name="calendar_add_name">Title</string>
     <string name="calendar_add_description">Description</string>
@@ -79,6 +80,7 @@
     <string name="ct_text4">\nDr. Clement Sagayaradja Lourdes\nProfessor &amp; H.O.D\nDepartment of English</string>
     <string name="ct_text5">\n\nConceptualized by\n\nDr. V. Prasanna Venkatesan\nProfessor\nDepartment of Banking Technology</string>
     <string name="ct_text6">\n\nDeveloped by\n\nShri. Hariharsudan Saravanan\nStudent/Alumni</string>
+    <string name="ct_text7">\n\nPrototyped by\n\nMs. Priyanka Mahesh\nIII Year B.Tech(CSE)\nPondicherry Engineering College</string>
     <string name="total_events">0 event(s) available</string>
     <string name="heading_7">PU Docs</string>
     <string name="passage_7">PU Docs is a place where you can view and download common documents shared by Pondicherry University such as exam timetables, practical dates etc.</string>
@@ -91,7 +93,7 @@
     <string name="app_version">Version 1.0.0</string>
     <string name="allrightsreserved">All rights reserved.</string>
     <string name="create_pdf">Create PDF</string>
-    <string name="pdf_event_info">Note : Filter conditions are not mandatory.</string>
+    <string name="pdf_event_info">Note : Filter conditions are mandatory.</string>
     <string-array name="contact_types">
         <item>Mobile</item>
         <item>Office</item>

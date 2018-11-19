@@ -2,7 +2,7 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,7 +43,7 @@ import am.appwise.components.ni.NoInternetDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 
 
-public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAdapter_All_Contacts_new.ItemClickListener {
+public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAdapter_All_Contacts_new.ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     Calligrapher calligrapher;
     private RecyclerView recyclerView;
@@ -56,10 +57,9 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
     List<ArrayList<String>> newList;
     TextView contact_card_name, contact_card_empid, contact_card_designation, contact_card_email_1, contact_card_email_2, contact_card_email_3, contact_card_number_1, contact_card_number_2, contact_card_number_3;
 
-    ProgressDialog progressDialog;
-
     NoInternetDialog noInternetDialog;
     private String status = "";
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Nullable
     @Override
@@ -67,10 +67,6 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
         View v = inflater.inflate(R.layout.fragment_allcontacts,container,false);
 
         HomeActivity.toolbar.setTitle("PU Contacts");
-
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
 
         new MyTask_statusCheck().execute();
         noInternetDialog = new NoInternetDialog.Builder(getActivity()).setCancelable(true).setBgGradientStart(getResources().getColor(R.color.statusbar_darkblue)).setBgGradientCenter(getResources().getColor(R.color.darkblue)).setBgGradientEnd(getResources().getColor(R.color.darkblue)).setButtonColor(getResources().getColor(R.color.colorAccent)).build();
@@ -83,7 +79,14 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
         databaseReference.keepSynced(true);
 
         contact_list.clear();
-        new MyTask().execute();
+
+        // SwipeRefreshLayout
+        mSwipeRefreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
 
         return v;
     }
@@ -102,6 +105,9 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
         adapter = new RecyclerViewAdapter_All_Contacts_new(getActivity(), contact_list);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
+        mSwipeRefreshLayout.setRefreshing(true);
+        new MyTask().execute();
 
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
@@ -132,6 +138,13 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
             public void afterTextChanged(Editable s) {
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.container,new Fragment_AllContacts_new()).commit();
     }
 
     @Override
@@ -285,11 +298,11 @@ public class Fragment_AllContacts_new extends Fragment implements RecyclerViewAd
                             contact_list.add(detail_list);
                         }
                     }
+                    mSwipeRefreshLayout.setRefreshing(false);
                     recyclerView.setAdapter(adapter);
                     if(contact_list.isEmpty()){
                         Toast.makeText(getActivity(),"No contacts yet!",Toast.LENGTH_SHORT).show();
                     }
-                    progressDialog.dismiss();
                 }
 
                 @Override

@@ -117,6 +117,17 @@
                 android:text="@string/ct_text5" />
 
             <TextView
+                android:id="@+id/textView25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3sp"
+                android:paddingEnd="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingStart="20dp"
+                android:text="@string/ct_text7" />
+
+            <TextView
                 android:id="@+id/textView24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

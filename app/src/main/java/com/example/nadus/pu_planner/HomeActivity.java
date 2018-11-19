@@ -1,5 +1,6 @@
 package com.example.nadus.pu_planner;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -168,9 +170,11 @@ public class HomeActivity extends AppCompatActivity implements DrawerAdapter.OnI
         showFragment(selectedScreen);
     }
 
+    @SuppressLint("WrongConstant")
     private void showFragment(Fragment fragment) {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment).addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 

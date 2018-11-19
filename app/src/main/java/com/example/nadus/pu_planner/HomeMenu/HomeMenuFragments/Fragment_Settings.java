@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
+import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
 import com.example.nadus.pu_planner.HomeActivity;
 import com.example.nadus.pu_planner.R;
@@ -69,12 +70,14 @@ public class Fragment_Settings extends Fragment {
     String path = "";
     private File pdfFile;
     final private int REQUEST_CODE_ASK_PERMISSIONS = 111;
-    String pdf_mainID = "";
+    String pdf_mainID = "My Calendar";
     private int mYear, mMonth, mDay;
     DatabaseReference pdf_databaseReference;
 
+    List<ArrayList<String>> pdfevent_list = new ArrayList<ArrayList<String>>();
     List<ArrayList<String>> pdfcontact_list = new ArrayList<ArrayList<String>>();
     ArrayList<String> pdfdetail_list;
+
     private int loop;
     ProgressDialog progressDialog;
 
@@ -118,8 +121,8 @@ public class Fragment_Settings extends Fragment {
         pdf_from_date = (EditText) bottom_view.findViewById(R.id.pdf_from_date);
         pdf_to_date = (EditText) bottom_view.findViewById(R.id.pdf_to_date);
         createPdf = (TextView) bottom_view.findViewById(R.id.createPdf);
-        event_layout.setVisibility(View.VISIBLE);
-        note.setVisibility(View.VISIBLE);
+        event_layout.setVisibility(View.GONE);
+        note.setVisibility(View.GONE);
         SwitchMultiButton mSwitchMultiButton = (SwitchMultiButton) bottom_view.findViewById(R.id.switchButton);
         mSwitchMultiButton.setText("My Calendar", "PU Calendar","My Contacts", "PU Contacts").setOnSwitchListener(new SwitchMultiButton.OnSwitchListener() {
             @Override
@@ -130,8 +133,8 @@ public class Fragment_Settings extends Fragment {
                     event_layout.setVisibility(View.GONE);
                     note.setVisibility(View.GONE);
                 } else if(pdf_mainID.equals("My Calendar") || pdf_mainID.equals("PU Calendar")){
-                    event_layout.setVisibility(View.VISIBLE);
-                    note.setVisibility(View.VISIBLE);
+                    event_layout.setVisibility(View.GONE);
+                    note.setVisibility(View.GONE);
                 }
             }
         });
@@ -192,13 +195,84 @@ public class Fragment_Settings extends Fragment {
             @Override
             public void onClick(View v) {
                 progressDialog.show();
-                new MyTask_contacts(pdf_mainID).execute();
+                if(pdf_mainID.equals("My Calendar") || pdf_mainID.equals("PU Calendar")){
+//                    if(pdf_from_date.getText().toString().equals("") || pdf_to_date.getText().toString().equals("")){
+//                        Toast.makeText(getActivity(),"Please select a valid range!",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+                    new MyTask_events(pdf_mainID).execute();
+                } else if(pdf_mainID.equals("My Contacts") || pdf_mainID.equals("PU Contacts")){
+                    new MyTask_contacts(pdf_mainID).execute();
+                }
             }
         });
 
         BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         dialog.setContentView(bottom_view);
         dialog.show();
+    }
+
+    private class MyTask_events extends AsyncTask<String,Integer,String>{
+
+        String PDF_mainID = "", FROM_date = "", TO_date = "";
+        public MyTask_events(String pdf_mainID) {
+            PDF_mainID = pdf_mainID;
+//            FROM_date = fromDate.replace("/","_");
+//            TO_date = toDate.replace("/","_");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            String current_user = firebaseAuth.getCurrentUser().getEmail();
+            current_user = current_user.replace(".","_");
+            if(PDF_mainID.equals("My Calendar")){
+                pdf_databaseReference = FirebaseDatabase.getInstance().getReference().child("UserAccounts").child("Staffs").child(current_user).child("EventsDiary");
+            } else if(PDF_mainID.equals("PU Calendar")){
+                pdf_databaseReference = FirebaseDatabase.getInstance().getReference().child("AllEventDiary");
+            }
+
+            pdf_databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    pdfevent_list.clear();
+                    for(DataSnapshot dataSnapshot1 : dataSnapshot.getChildren())
+                    {
+                        for(DataSnapshot dataSnapshot2 : dataSnapshot1.getChildren()){
+                            //if(dataSnapshot1.getKey().equals(FROM_date) || !(dataSnapshot1.getKey().equals(TO_date))){
+                            EventAdapter eventAdapter = dataSnapshot2.getValue(EventAdapter.class);
+                            pdfdetail_list = new ArrayList<String>();
+                            pdfdetail_list.add(0,eventAdapter.getsCalendarname());
+                            pdfdetail_list.add(1,eventAdapter.getsCalendardescription());
+                            pdfdetail_list.add(2,eventAdapter.getsDatepicker());
+                            pdfdetail_list.add(3,eventAdapter.getsTimepicker());
+                            pdfevent_list.add(pdfdetail_list);
+                            //  }
+                        }
+                    }
+                    if(pdfevent_list.isEmpty()){
+                        Toast.makeText(getActivity(),"No events yet!",Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                    } else {
+                        try {
+                            createPdfWrapper();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (DocumentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            return null;
+        }
     }
 
     private class MyTask_contacts extends AsyncTask<String,Integer,String>{
@@ -246,7 +320,7 @@ public class Fragment_Settings extends Fragment {
                         progressDialog.dismiss();
                     } else {
                         try {
-                            createPdfWrapper(pdfcontact_list);
+                            createPdfWrapper();
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         } catch (DocumentException e) {
@@ -265,7 +339,7 @@ public class Fragment_Settings extends Fragment {
         }
     }
 
-    private void createPdfWrapper(List<ArrayList<String>> pdfcontact_list) throws FileNotFoundException,DocumentException{
+    private void createPdfWrapper() throws FileNotFoundException,DocumentException{
 
         int hasWriteStoragePermission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
@@ -290,7 +364,7 @@ public class Fragment_Settings extends Fragment {
             }
             return;
         }else {
-            createPdf(pdfcontact_list);
+            createPdf();
         }
     }
     @Override
@@ -300,7 +374,7 @@ public class Fragment_Settings extends Fragment {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // Permission Granted
                     try {
-                        createPdfWrapper(pdfcontact_list);
+                        createPdfWrapper();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (DocumentException e) {
@@ -325,7 +399,7 @@ public class Fragment_Settings extends Fragment {
                 .show();
     }
 
-    private void createPdf(List<ArrayList<String>> pdfcontact_list) throws FileNotFoundException, DocumentException {
+    private void createPdf() throws FileNotFoundException, DocumentException {
 
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         if (!docsFolder.exists()) {
@@ -340,23 +414,34 @@ public class Fragment_Settings extends Fragment {
         document.open();
         document.add(new Paragraph(pdf_mainID+"(s) Information"));
         document.add(new Paragraph(" "));
-        for(loop = 0 ; loop < pdfcontact_list.size(); loop++){
-            StringBuilder stringBuilder = new StringBuilder("Name : ").append(pdfcontact_list.get(loop).get(2))
-                    .append("\nID : ").append(pdfcontact_list.get(loop).get(0))
-                    .append("\nDepartment : ").append(pdfcontact_list.get(loop).get(3))
-                    .append("\nDesignation : ").append(pdfcontact_list.get(loop).get(4))
-                    .append("\nCategory : ").append(pdfcontact_list.get(loop).get(1))
-                    .append("\nEmail 1 : ").append(pdfcontact_list.get(loop).get(5))
-                    .append("\nEmail 2 : ").append(pdfcontact_list.get(loop).get(6))
-                    .append("\nEmail 3 : ").append(pdfcontact_list.get(loop).get(7))
-                    .append("\nNumber 1 : ").append(pdfcontact_list.get(loop).get(8))
-                    .append("\nNumber 2 : ").append(pdfcontact_list.get(loop).get(9))
-                    .append("\nNumber 3 : ").append(pdfcontact_list.get(loop).get(10))
-                    .append("\n");
-            document.add(new Paragraph(stringBuilder.toString()));
-            document.add(new Paragraph(" "));
+        if(pdf_mainID.contains("Contacts")){
+            for(loop = 0 ; loop < pdfcontact_list.size(); loop++){
+                StringBuilder stringBuilder = new StringBuilder("Name : ").append(pdfcontact_list.get(loop).get(2))
+                        .append("\nID : ").append(pdfcontact_list.get(loop).get(0))
+                        .append("\nDepartment : ").append(pdfcontact_list.get(loop).get(3))
+                        .append("\nDesignation : ").append(pdfcontact_list.get(loop).get(4))
+                        .append("\nCategory : ").append(pdfcontact_list.get(loop).get(1))
+                        .append("\nEmail 1 : ").append(pdfcontact_list.get(loop).get(5))
+                        .append("\nEmail 2 : ").append(pdfcontact_list.get(loop).get(6))
+                        .append("\nEmail 3 : ").append(pdfcontact_list.get(loop).get(7))
+                        .append("\nNumber 1 : ").append(pdfcontact_list.get(loop).get(8))
+                        .append("\nNumber 2 : ").append(pdfcontact_list.get(loop).get(9))
+                        .append("\nNumber 3 : ").append(pdfcontact_list.get(loop).get(10))
+                        .append("\n");
+                document.add(new Paragraph(stringBuilder.toString()));
+                document.add(new Paragraph(" "));
+            }
+        } else if(pdf_mainID.contains("Calendar")){
+            for(loop = 0 ; loop < pdfevent_list.size(); loop++){
+                StringBuilder stringBuilder = new StringBuilder("Name : ").append(pdfevent_list.get(loop).get(0))
+                        .append("\nDescription : ").append(pdfevent_list.get(loop).get(1))
+                        .append("\nDate of event : ").append(pdfevent_list.get(loop).get(2))
+                        .append("\nTime of event : ").append(pdfevent_list.get(loop).get(3))
+                        .append("\n");
+                document.add(new Paragraph(stringBuilder.toString()));
+                document.add(new Paragraph(" "));
+            }
         }
-
         document.close();
         displayAlert();
         progressDialog.dismiss();
@@ -365,7 +450,7 @@ public class Fragment_Settings extends Fragment {
     private void displayAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Success!");
-        builder.setMessage("Your pdf is stored in\nInternal Storage -> Documents -> '\"+pdf_mainID+\".pdf'");
+        builder.setMessage("Your pdf is stored in\nInternal Storage -> Documents -> '"+pdf_mainID+"'.pdf'");
         builder.setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

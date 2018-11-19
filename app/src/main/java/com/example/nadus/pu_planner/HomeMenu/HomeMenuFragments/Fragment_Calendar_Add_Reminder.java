@@ -121,18 +121,13 @@ public class Fragment_Calendar_Add_Reminder extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Warning!");
                 builder.setMessage("Make sure you have set reminder for the event else you will not be notified.");
-                builder.setPositiveButton("Yes i've set it", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         progressDialog.show();
                         updateValueinDB();
                         Toast.makeText(getActivity(), "Success!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getActivity(), HomeActivity.class));
-                    }
-                }).setNegativeButton("Oops I forgot", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
                     }
                 });
                 AlertDialog alertDialog = builder.create();

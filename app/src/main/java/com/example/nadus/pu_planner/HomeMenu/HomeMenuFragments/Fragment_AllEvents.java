@@ -1,16 +1,20 @@
 package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.EventAdapter;
 import com.example.nadus.pu_planner.FirebaseAdapters.StatusAdapter;
@@ -46,6 +51,7 @@ import me.anwarshahriar.calligrapher.Calligrapher;
 
 public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_All_Calendar.ItemClickListener{
 
+    private static final int REQUEST_CODE_ASK_PERMISSIONS = 222;
     Calligrapher calligrapher;
     String today_date2="", selected_date2="", selected_day2;
     TextView current_date2, current_day2, b_name, b_description, b_datetime, total_events2;
@@ -139,6 +145,8 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         date_temp2 = today_date2.replace("/","_");
         date_func(date_temp2);
 
+        checkPermission();
+
         return v;
     }
 
@@ -171,6 +179,61 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
         BottomSheetDialog dialog = new BottomSheetDialog(getActivity());
         dialog.setContentView(bottom_view);
         dialog.show();
+    }
+
+    public void checkPermission() {
+
+        int hasCalendarPermission1 = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR);
+        int hasCalendarPermission2 = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR);
+        if (hasCalendarPermission1 != PackageManager.PERMISSION_GRANTED && hasCalendarPermission2 != PackageManager.PERMISSION_GRANTED) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CONTACTS)) {
+                    showMessageOKCancel("You need to allow access to Calendar",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                        requestPermissions(new String[]{Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR},
+                                                REQUEST_CODE_ASK_PERMISSIONS);
+                                    }
+                                }
+                            });
+                    return;
+                }
+
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        REQUEST_CODE_ASK_PERMISSIONS);
+            }
+            return;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission Granted
+
+                } else {
+                    // Permission Denied
+                    Toast.makeText(getActivity(), "Calendar Permission Denied!", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setCancelable(false)
+                .create()
+                .show();
     }
 
     private void date_func(String date_temp2)
@@ -218,6 +281,7 @@ public class Fragment_AllEvents extends Fragment implements RecyclerViewAdapter_
     private String checkReminder(String name, String description) {
         String flag = "off";
         try{
+            checkPermission();
             Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
             Cursor cursors = getActivity().getContentResolver().query(CALENDAR_URI, null, null, null, null);
             if (cursors.moveToFirst())

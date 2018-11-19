@@ -2,6 +2,7 @@ package com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,9 +15,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.example.nadus.pu_planner.FirebaseAdapters.ContactsAdapter;
@@ -32,6 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +58,13 @@ public class Fragment_PuDocs extends Fragment implements RecyclerViewAdapter_Pud
     String current_doc = "";
     DocsAdapter docsAdapter;
 
+    MaterialSearchBar searchBar2;
+
     List<String> docs_list = new ArrayList<String>();
     List<String> url_list = new ArrayList<String>();
 
+    List<String> new_docs_list = new ArrayList<String>();
+    List<String> new_url_list = new ArrayList<String>();
 
     @Nullable
     @Override
@@ -74,6 +83,7 @@ public class Fragment_PuDocs extends Fragment implements RecyclerViewAdapter_Pud
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.keepSynced(true);
+        searchBar2 = (MaterialSearchBar) v.findViewById(R.id.searchBar2);
 
         new MyTask().execute();
         return v;
@@ -94,16 +104,52 @@ public class Fragment_PuDocs extends Fragment implements RecyclerViewAdapter_Pud
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
 
+        searchBar2.addTextChangeListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s1, int start1, int count1, int after1) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s1, int start1, int before1, int count1) {
+                String input1 = s1.toString().toLowerCase();
+                new_docs_list = new ArrayList<>();
+                for (int i = 0; i < docs_list.size() ; i++) {
+                    if (docs_list.get(i).toLowerCase().contains(input1.toLowerCase()) || docs_list.get(i).toLowerCase().contains(input1.toLowerCase()) || docs_list.get(i).toLowerCase().contains(input1.toLowerCase()) || docs_list.get(i).toLowerCase().contains(input1.toLowerCase())) {
+                        new_docs_list.add(docs_list.get(i));
+                        new_url_list.add(url_list.get(i));
+                    }
+                }
+                adapter = new RecyclerViewAdapter_Pudocs(getActivity(), new_docs_list);
+                recyclerView.setAdapter(adapter);
+                adapter.setClickListener(new RecyclerViewAdapter_Pudocs.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(getActivity(),"Opening "+new_docs_list.get(position),Toast.LENGTH_SHORT).show();
+                        openWebPage(new_url_list.get(position));
+                    }
+                });
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s1) {
+            }
+        });
     }
 
     @Override
     public void onItemClick(View view, int position) {
         current_doc = docs_list.get(position);
-        Toast.makeText(getActivity(),"Clicked "+docs_list.get(position),Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent();
-        intent.setType(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url_list.get(position)));
-        startActivity(intent);
+        Toast.makeText(getActivity(),"Opening "+docs_list.get(position),Toast.LENGTH_SHORT).show();
+        openWebPage(url_list.get(position));
+    }
+
+    public void openWebPage(String url) {
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     private class MyTask extends AsyncTask<String, Integer, String>

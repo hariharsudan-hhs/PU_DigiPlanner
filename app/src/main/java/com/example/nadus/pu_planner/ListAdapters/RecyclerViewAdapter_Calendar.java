@@ -14,13 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.example.nadus.pu_planner.HomeMenu.HomeMenuFragments.Fragment_Calendar;
 import com.example.nadus.pu_planner.R;
 import com.github.zagum.switchicon.SwitchIconView;
 
@@ -34,6 +31,7 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
     public List<ArrayList<String>> mData;
     public LayoutInflater mInflater;
     public ItemClickListener mClickListener;
+    Fragment_Calendar fragment_calendar;
 
     Context context;
     private Uri mInsert;
@@ -74,6 +72,7 @@ public class RecyclerViewAdapter_Calendar extends RecyclerView.Adapter<RecyclerV
         holder.switchIconView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fragment_calendar.checkPermission();
                 holder.switchIconView.switchState(true);
                 if(holder.switchIconView.isIconEnabled()){
 //                  add event
